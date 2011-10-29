@@ -13,49 +13,47 @@ public class Klapuri{
 	double[] whiten(double[] dataIn,PolyphonicPitchDetection mainProgram){
 		double[] whitened = new double[dataIn.length];
 			
-			/*Calculate signal energies in filter windows??*/
-			Vector<Double> Hb = new Vector<Double>();
-			Vector<Integer> indeksit = new Vector<Integer>();
-			
-			for (int i = 1;i<31;++i){
-				Hb.clear();
-				indeksit.clear();
-				kk=0;
-				while (mainProgram.freq[kk] <= mainProgram.cb[i+1]){
-					if (mainProgram.freq[kk] >= mainProgram.cb[i-1]){
-						indeksit.add(kk);
-						Hb.push_back(1-Math.abs(mainProgram.cb[i]-mainProgram.freq[indeksit.back()])/(mainProgram.cb[i+1]-mainProgram.cb[i-1]));
-					}
-					kk++;
-				}
-				summa = 0;
-				for (int j = 0;j< Hb.size();j++){
-					summa = summa+Hb[j]*yK[indeksit[j]]*yK[indeksit[j]];
-				}
-				stdb.push_back(sqrt(1/(double )ikkuna*summa));
-				gammab.push_back(pow(stdb.back(),0.33-1.0));
-			}
-
-			//Interpolate gammab...
+		/*Calculate signal energies in filter windows??*/
+		Vector<Double> Hb = new Vector<Double>();
+		Vector<Integer> indeksit = new Vector<Integer>();
+		Vector<Double> gammab = new Vector<Double>();
+		for (int i = 1;i<31;++i){
+			Hb.clear();
+			indeksit.clear();
 			kk=0;
-			while (freq[kk] < cb[1]){	//Search for the first frequency..
-				kk++;
-			}
-			double whitemax=0;
-			for (int i = 0;i<gammab.size()-1;i++){
-				whitenedk[kk] = gammab[i]*yK[kk];
-				while (freq[kk] < cb[i+2]){
-					if (freq[kk] > cb[i+1]){
-						whitenedk[kk] = ((gammab[i+1]-gammab[i])*(freq[kk]-cb[i+1])/(cb[i+2]-cb[i+1])+gammab[i])*yK[kk];
-					}
-					kk++;
+			while (mainProgram.freq[kk] <= mainProgram.cb[i+1]){
+				if (mainProgram.freq[kk] >= mainProgram.cb[i-1]){
+					indeksit.add(kk);
+					Hb.add(1-Math.abs(mainProgram.cb[i]-mainProgram.freq[indeksit.lastElement()])/(mainProgram.cb[i+1]-mainProgram.cb[i-1]));
 				}
-				kk++;
+				++kk;
 			}
-			origwhite = whitenedk;
-			//Pre whitening done
-		
-		
+			double summa = 0;
+			for (int j = 0;j< Hb.size();++j){
+				summa += Hb.get(j)*Math.pow(dataIn[indeksit.get(j)],2.0);
+			}
+			stdb.add(Math.sqrt(1/((double)mainProgram.fftWindow)*summa));
+			gammab.add(Math.pow(stdb.lastElement(),0.33-1.0));
+		}
+
+		//Interpolate gammab...
+		kk=0;
+		while (mainProgram.freq[kk] < mainProgram.cb[1]){	//Search for the first frequency..
+			++kk;
+		}
+		double whitemax=0;
+		for (int i = 0;i<gammab.size()-1;++i){
+			whitenedk[kk] = gammab.get(i)*dataIn[kk];
+			while (mainProgram.freq[kk] < mainProgram.cb[i+2]){
+				if (mainProgram.freq[kk] > mainProgram.cb[i+1]){
+					whitenedk[kk] = ((gammab.get(i+1)-gammab.get(i))*(mainProgram.freq[kk]-mainProgram.cb[i+1])/(mainProgram.cb[i+2]-mainProgram.cb[i+1])+gammab.get(i))*dataIn[kk];
+				}
+				++kk;
+			}
+			++kk;
+		}
+		//Pre whitening done
+	
 		return whitened;
 	}
 }
