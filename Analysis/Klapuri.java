@@ -17,6 +17,8 @@ public class Klapuri{
 		Vector<Double> Hb = new Vector<Double>();
 		Vector<Integer> indeksit = new Vector<Integer>();
 		Vector<Double> gammab = new Vector<Double>();
+		Vector<Double> stdb = new Vector<Double>();
+		
 		int kk;
 		for (int i = 1;i<31;++i){
 			Hb.clear();
@@ -44,10 +46,10 @@ public class Klapuri{
 		}
 		double whitemax=0;
 		for (int i = 0;i<gammab.size()-1;++i){
-			whitenedk[kk] = gammab.get(i)*dataIn[kk];
+			whitened[kk] = gammab.get(i)*dataIn[kk];
 			while (mainProgram.freq[kk] < mainProgram.cb[i+2]){
 				if (mainProgram.freq[kk] > mainProgram.cb[i+1]){
-					whitenedk[kk] = ((gammab.get(i+1)-gammab.get(i))*(mainProgram.freq[kk]-mainProgram.cb[i+1])/(mainProgram.cb[i+2]-mainProgram.cb[i+1])+gammab.get(i))*dataIn[kk];
+					whitened[kk] = ((gammab.get(i+1)-gammab.get(i))*(mainProgram.freq[kk]-mainProgram.cb[i+1])/(mainProgram.cb[i+2]-mainProgram.cb[i+1])+gammab.get(i))*dataIn[kk];
 				}
 				++kk;
 			}
