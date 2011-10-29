@@ -46,8 +46,10 @@ public class Capture implements Runnable{
 								mainProgram.rawFigure.drawImage(data,mainProgram.imWidth,mainProgram.imHeight);
 								/*Add pitch detection here for 16 bit*/
 								Analysis analysis = new Analysis(data,mainProgram);	//FFT + klapuri analysis
+								/*
 								mainProgram.fftFigure.drawImage(analysis.amplitudes,mainProgram.imWidth,mainProgram.imHeight,analysis.maximum);
-								mainProgram.whitenedFftFigure.drawImage(analysis.klapuri.whitened,mainProgram.imWidth,mainProgram.imHeight,analysis.whitenedMaximum);
+								*/
+								mainProgram.whitenedFftFigure.drawImage(analysis.klapuri.whitened,mainProgram.imWidth,mainProgram.imHeight,analysis.whitenedMaximum,analysis.klapuri.f0s);
 							}
 								//mainProgram.rawFigure.paintImmediately(0,0,mainProgram.imWidth,mainProgram.imHeight);							
 							//mainProgram.rawFigure.repaint();
