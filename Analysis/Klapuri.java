@@ -3,19 +3,87 @@ import java.util.*;
 import ui.*;
 public class Klapuri{
 	public double[] whitened;
-	public Vector<Integer> f0indices;
+	public Vector<Double> f0s;
 	PolyphonicPitchDetection mainProgram;
+	int harmonics = 20;
+	int ymparoivia = 1;
+	double alpha = 52.0; //Hz
+	double beta = 320.0; //Hz
+	double dee = 0.89;
 	public Klapuri(double[] data, double max,PolyphonicPitchDetection mainProgram){
 		//whitened = (double[]) data.clone();
 		this.mainProgram = mainProgram;
 		/*Whiten the data*/
 		whitened = whiten(data,mainProgram);
-		f0indices = detectF0s(whitened);
+		f0s = detectF0s(whitened,mainProgram);
 	}
 	
-	Vector<Integer> detectF0s(double[] whitened){
-		Vector<Integer> f0indices = new Vector<Integer>();
-		return f0indices;
+	Vector<Double> detectF0s(double[] whitened, PolyphonicPitchDetection mainProgram){
+		Vector<Double> F0s = new Vector<Double>();
+		Vector<Double> S = new Vector<Double>();  
+		S.add(0.0);
+		//Begin extracting F0s
+		double smax=0;
+		int sijainti =0;
+		int detectedF0s = 0;
+		//F0 detection
+		double[] resultsk = new double [mainProgram.freq.length];
+		double[] salience;
+		double summa;
+		while (S.lastElement() >= smax){
+			//Calculating the salience function (the hard way...)
+			salience = new double [mainProgram.freq.length];
+			double salmax = 0;
+			
+			for (int i= 0;i<mainProgram.f0index.length;++i){
+				summa = 0;
+				for (int j = 1;j <harmonics;++j){
+					if (mainProgram.f0index[i]*j <mainProgram.freq.length){
+						summa +=(mainProgram.samplingRate*mainProgram.freq[mainProgram.f0index[i]*j]+alpha)/(j*mainProgram.samplingRate*mainProgram.freq[mainProgram.f0index[i]*j]+beta)*whitened[mainProgram.f0index[i]*j];
+					}
+				}
+				salience[mainProgram.f0index[i]] = summa;
+				if (salience[mainProgram.f0index[i]] > salmax){
+					sijainti= mainProgram.f0index[i];
+					salmax = salience[mainProgram.f0index[i]];
+				}
+			}
+			
+			//Salience calculated
+			++detectedF0s;
+			F0s.add(mainProgram.freq[sijainti]); //First F0
+			
+			//Frequency cancellation
+			for (int j = 1; j<=harmonics;++j){
+				for (int i = -1;i <= 1;++i){
+					resultsk[sijainti*j+i] = resultsk[sijainti*j+i]+(mainProgram.samplingRate*mainProgram.freq[sijainti*j+i]+alpha)/(j*mainProgram.samplingRate*mainProgram.freq[sijainti*j+i]+beta)*whitened[sijainti*j+i];
+					if (whitened[sijainti*j+i]-resultsk[sijainti*j+i] > 0){
+						whitened[sijainti*j+i]= whitened[sijainti*j+i]-resultsk[sijainti*j+i]*dee;
+					}else{
+						whitened[sijainti*j+i]=0;
+					}
+				}
+			}
+			//requency cancellation done
+			//Polyphony estimation
+			if (S.size() < detectedF0s){
+				S.add(0.0);
+			}
+			summa = 0;
+			for (int i = 0; i< resultsk.length;++i){
+				summa += resultsk[i];
+			}
+			S.set(S.size()-1,summa/Math.pow(detectedF0s,0.7));
+			if (S.lastElement() > smax){
+				smax = S.lastElement();
+			}
+			//Polyphony estimated
+		}
+		//The last F0 is extra...
+		if (F0s.size() > 1){
+			F0s.remove(F0s.size()-1);
+		}
+		return F0s;
 	}
 	
 	double[] whiten(double[] dataIn,PolyphonicPitchDetection mainProgram){
