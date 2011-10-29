@@ -17,6 +17,7 @@ public class Klapuri{
 		Vector<Double> Hb = new Vector<Double>();
 		Vector<Integer> indeksit = new Vector<Integer>();
 		Vector<Double> gammab = new Vector<Double>();
+		int kk;
 		for (int i = 1;i<31;++i){
 			Hb.clear();
 			indeksit.clear();
