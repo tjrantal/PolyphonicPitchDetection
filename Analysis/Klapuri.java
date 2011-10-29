@@ -3,11 +3,19 @@ import java.util.*;
 import ui.*;
 public class Klapuri{
 	public double[] whitened;
+	public Vector<Integer> f0indices;
 	PolyphonicPitchDetection mainProgram;
 	public Klapuri(double[] data, double max,PolyphonicPitchDetection mainProgram){
 		//whitened = (double[]) data.clone();
 		this.mainProgram = mainProgram;
+		/*Whiten the data*/
 		whitened = whiten(data,mainProgram);
+		f0indices = detectF0s(whitened);
+	}
+	
+	Vector<Integer> detectF0s(double[] whitened){
+		Vector<Integer> f0indices = new Vector<Integer>();
+		return f0indices;
 	}
 	
 	double[] whiten(double[] dataIn,PolyphonicPitchDetection mainProgram){
