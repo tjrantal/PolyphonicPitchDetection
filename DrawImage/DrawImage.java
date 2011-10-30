@@ -25,6 +25,7 @@ import javax.swing.*;
 import java.util.Vector;
 import java.awt.image.*;
 import java.awt.image.WritableRaster;
+import java.text.DecimalFormat;	//For rounding text
 
 public class DrawImage extends JPanel{
 
@@ -32,9 +33,10 @@ public class DrawImage extends JPanel{
 	public Image imageToDraw;
 	double width;
 	double height;
-	Vector<Double> F0s;
+	String f0s;
+	DecimalFormat dfo;
 	public DrawImage(){
-		F0s = new Vector<Double>();
+		dfo = new DecimalFormat("0.0");
 		//setBackground(new Color(0, 0, 0));
 	}
 
@@ -84,7 +86,13 @@ public class DrawImage extends JPanel{
 			image[x+y*widthIn]= 255<<24 | 255 <<16| 255 <<8| 255; 
 		}
       imageToDraw = createImage(new MemoryImageSource(widthIn,heightIn,image,0,widthIn));
-      this.F0s = F0s;
+		f0s = "";
+		if (F0s.size() > 0){
+			for (int i = 0; i<F0s.size();++i){
+				f0s += "F"+i+" "+dfo.format(F0s.get(i))+" ";
+			}
+	   }
+		System.out.println(f0s);
       //imageToDraw= imageToDraw.getScaledInstance(500, -1, Image.SCALE_SMOOTH);
 		repaint();
 	}
@@ -141,13 +149,13 @@ public class DrawImage extends JPanel{
 	
 	public void paint(Graphics g) {
 		g.drawImage(imageToDraw,0,0,null);
-		if (F0s.size() > 0){
-			System.out.println("F0"+F0s.get(0));
-		   for (int i = 0; i<F0s.size();++i){
-		   	g.drawString(Double.toString(F0s.get(i)),25,25*i);
-		   }
-		   F0s = new Vector<Double>();
+		/*
+		if (f0s.length()>0){
+			g.setColor(new Color(255,0,0));
+			g.setFont(new Font("Helvetica",Font.PLAIN,12));
+		   g.drawString(f0s,25,25);
       }
+      */
 	}
 
 } 

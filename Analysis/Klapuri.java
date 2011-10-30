@@ -55,12 +55,14 @@ public class Klapuri{
 			
 			//Frequency cancellation
 			for (int j = 1; j<=harmonics;++j){
-				for (int i = -1;i <= 1;++i){
-					resultsk[sijainti*j+i] = resultsk[sijainti*j+i]+(mainProgram.samplingRate*mainProgram.freq[sijainti*j+i]+alpha)/(j*mainProgram.samplingRate*mainProgram.freq[sijainti*j+i]+beta)*whitened[sijainti*j+i];
-					if (whitened[sijainti*j+i]-resultsk[sijainti*j+i] > 0){
-						whitened[sijainti*j+i]= whitened[sijainti*j+i]-resultsk[sijainti*j+i]*dee;
-					}else{
-						whitened[sijainti*j+i]=0;
+				if (sijainti*j+1 <whitened.length){
+					for (int i = -1;i <= 1;++i){
+						resultsk[sijainti*j+i] = resultsk[sijainti*j+i]+(mainProgram.samplingRate*mainProgram.freq[sijainti*j+i]+alpha)/(j*mainProgram.samplingRate*mainProgram.freq[sijainti*j+i]+beta)*whitened[sijainti*j+i];
+						if (whitened[sijainti*j+i]-resultsk[sijainti*j+i] > 0){
+							whitened[sijainti*j+i]= whitened[sijainti*j+i]-resultsk[sijainti*j+i]*dee;
+						}else{
+							whitened[sijainti*j+i]=0;
+						}
 					}
 				}
 			}
@@ -80,6 +82,7 @@ public class Klapuri{
 			//Polyphony estimated
 		}
 		//The last F0 is extra...
+		System.out.println("Remove extra");
 		if (F0s.size() > 1){
 			F0s.remove(F0s.size()-1);
 		}
