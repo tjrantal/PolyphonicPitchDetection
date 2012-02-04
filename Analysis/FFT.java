@@ -19,6 +19,8 @@ Modified minimally by Timo Rantalainen 2011
 
 	N.B.  the above text was copied from http://www.gnu.org/licenses/gpl.html
 	unmodified. I have not attached a copy of the GNU license to the source...
+	Also, The licensing might not apply to the work I've simply copied from the
+	web page indicated on the top of this file.
 
     Copyright (C) 2011 Timo Rantalainen
 */

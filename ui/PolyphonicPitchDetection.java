@@ -1,6 +1,26 @@
 /*
+	This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+	N.B.  the above text was copied from http://www.gnu.org/licenses/gpl.html
+	unmodified. I have not attached a copy of the GNU license to the source...
+
+    Copyright (C) 2011-2012 Timo Rantalainen
+*/
+
+/*
 Written by Timo Rantalainen tjrantal@gmail.com 2010 (C++ version) - 2012 (Java version)
-Based on Anssi Klapuri's (list of publications http://www.cs.tut.fi/~klap/iiro/ and http://www.elec.qmul.ac.uk/people/anssik/publications.htm) Congress publication
+Based on Anssi Klapuri's (list of publications http://www.cs.tut.fi/~klap/iiro/ and http://www.elec.qmul.ac.uk/people/anssik/publications.htm) congress publication
 Klapuri, A., " Multiple fundamental frequency estimation by summing harmonic amplitudes," 7th International Conference on Music Information Retrieval (ISMIR-06), Victoria, Canada, Oct. 2006. 
 http://www.cs.tut.fi/sgn/arg/klap/klap2006ismir.pdf
  and doctoral thesis:
@@ -8,7 +28,7 @@ Klapuri, A. " Signal processing methods for the automatic transcription of music
  http://www.cs.tut.fi/sgn/arg/klap/phd/klap_phd.pdf  
 
 Contributions from other people taken from the internet (in addition to Java-tutorials for GUI, sound capture etc.)
-FFT-transform:					
+FFT-transform					
 
 Required class files (in addition to this one..).
 ReadStratecFile.java		//Stratec pQCT file reader
@@ -44,8 +64,6 @@ import java.awt.image.DataBuffer;
 import Capture.*;	//Sound capture
 import DrawImage.*;		//Drawing images
 
-/*implements AL antaa mahdollisuuden kayttaa eventteja koneelta. Kayttis toteuttaa...*/
-/*extends = inherit, voi peria vain yhden*/
 public class PolyphonicPitchDetection extends JPanel implements ActionListener {	
 	JButton beginPitchDetection;
 	JButton endPitchDetection;
@@ -55,15 +73,15 @@ public class PolyphonicPitchDetection extends JPanel implements ActionListener {
 	public int fftWindow = 4096;	/*FFT window width ~0.1 s -> Max ~600 bpm*/
 	public float samplingRate = 44100;
 	public static int imWidth =800;
-	public static int imHeight =150;
+	public static int imHeight =250;
 	public boolean continueCapturing;
 	public static int w;
 	public static int h; 
-	static int traces;
-	public double[] cb;	/*Klapuri whitening ranges*/
-	public double[] freq;	/*FFT fequency bins*/
+	static int traces = 2;		/*how many traces are we plotting...*/
+	public double[] cb;			/*Klapuri whitening ranges*/
+	public double[] freq;		/*FFT fequency bins*/
 	public double[] f0cands;	/*Klapuri F0 candidates*/
-	public int[] f0index;	/*Klapuri F0 candidate indices*/
+	public int[] f0index;		/*Klapuri F0 candidate indices*/
 	public PolyphonicPitchDetection(){ /*Constructor*/
 
 		JPanel buttons = new JPanel(); /*Panel for start and stop*/
@@ -85,7 +103,7 @@ public class PolyphonicPitchDetection extends JPanel implements ActionListener {
 		buttons.add(endPitchDetection);
 		add(buttons);
 		
-		traces =3;
+
 		/*Figure for captured sound*/
 		rawFigure = new DrawImage();
 		rawFigure.setBackground(new Color(0, 0, 0));
@@ -110,7 +128,6 @@ public class PolyphonicPitchDetection extends JPanel implements ActionListener {
 
 	public void actionPerformed(ActionEvent e) {
 		if ("beginPitchDetection".equals(e.getActionCommand())) {
-			//JOptionPane.showMessageDialog(this,"Nappia painettiin.");
 			endPitchDetection.setEnabled(true);
 			beginPitchDetection.setEnabled(false);	
 			/*Create constant arrays for Klapuri*/
@@ -167,7 +184,6 @@ public class PolyphonicPitchDetection extends JPanel implements ActionListener {
 		JComponent newContentPane = new PolyphonicPitchDetection();
 		newContentPane.setOpaque(true); //content panes must be opaque
 		f.setContentPane(newContentPane);
-		//f.getContentPane().add("Center", ohjelma);
 		f.pack();
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 

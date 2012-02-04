@@ -1,3 +1,23 @@
+/*
+	This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+	N.B.  the above text was copied from http://www.gnu.org/licenses/gpl.html
+	unmodified. I have not attached a copy of the GNU license to the source...
+
+    Copyright (C) 2011-2012 Timo Rantalainen
+*/
+
 package Analysis;
 import java.util.*;
 import ui.*;
@@ -6,7 +26,7 @@ public class Klapuri{
 	public Vector<Double> f0s;
 	PolyphonicPitchDetection mainProgram;
 	int harmonics = 20;
-	int ymparoivia = 1;
+	int surroundingBins = 1;
 	double alpha = 52.0; //Hz
 	double beta = 320.0; //Hz
 	double dee = 0.89;
@@ -24,7 +44,7 @@ public class Klapuri{
 		S.add(0.0);
 		//Begin extracting F0s
 		double smax=0;
-		int sijainti =0;
+		int index =0;
 		int detectedF0s = 0;
 		//F0 detection
 		double[] resultsk = new double [mainProgram.freq.length];
@@ -44,24 +64,24 @@ public class Klapuri{
 				}
 				salience[mainProgram.f0index[i]] = summa;
 				if (salience[mainProgram.f0index[i]] > salmax){
-					sijainti= mainProgram.f0index[i];
+					index= mainProgram.f0index[i];
 					salmax = salience[mainProgram.f0index[i]];
 				}
 			}
 			
 			//Salience calculated
 			++detectedF0s;
-			F0s.add(mainProgram.freq[sijainti]); //First F0
+			F0s.add(mainProgram.freq[index]); //First F0
 			
 			//Frequency cancellation
 			for (int j = 1; j<=harmonics;++j){
-				if (sijainti*j+1 <whitened.length){
+				if (index*j+1 <whitened.length){
 					for (int i = -1;i <= 1;++i){
-						resultsk[sijainti*j+i] = resultsk[sijainti*j+i]+(mainProgram.samplingRate*mainProgram.freq[sijainti*j+i]+alpha)/(j*mainProgram.samplingRate*mainProgram.freq[sijainti*j+i]+beta)*whitened[sijainti*j+i];
-						if (whitened[sijainti*j+i]-resultsk[sijainti*j+i] > 0){
-							whitened[sijainti*j+i]= whitened[sijainti*j+i]-resultsk[sijainti*j+i]*dee;
+						resultsk[index*j+i] = resultsk[index*j+i]+(mainProgram.samplingRate*mainProgram.freq[index*j+i]+alpha)/(j*mainProgram.samplingRate*mainProgram.freq[index*j+i]+beta)*whitened[index*j+i];
+						if (whitened[index*j+i]-resultsk[index*j+i] > 0){
+							whitened[index*j+i]= whitened[index*j+i]-resultsk[index*j+i]*dee;
 						}else{
-							whitened[sijainti*j+i]=0;
+							whitened[index*j+i]=0;
 						}
 					}
 				}
@@ -82,7 +102,7 @@ public class Klapuri{
 			//Polyphony estimated
 		}
 		//The last F0 is extra...
-		System.out.println("Remove extra");
+		//System.out.println("Remove extra");
 		if (F0s.size() > 1){
 			F0s.remove(F0s.size()-1);
 		}
@@ -94,25 +114,25 @@ public class Klapuri{
 			
 		/*Calculate signal energies in filter windows??*/
 		Vector<Double> Hb = new Vector<Double>();
-		Vector<Integer> indeksit = new Vector<Integer>();
+		Vector<Integer> indexes = new Vector<Integer>();
 		Vector<Double> gammab = new Vector<Double>();
 		Vector<Double> stdb = new Vector<Double>();
 		
 		int kk;
 		for (int i = 1;i<31;++i){
 			Hb.clear();
-			indeksit.clear();
+			indexes.clear();
 			kk=0;
 			while (mainProgram.freq[kk] <= mainProgram.cb[i+1]){
 				if (mainProgram.freq[kk] >= mainProgram.cb[i-1]){
-					indeksit.add(kk);
-					Hb.add(1-Math.abs(mainProgram.cb[i]-mainProgram.freq[indeksit.lastElement()])/(mainProgram.cb[i+1]-mainProgram.cb[i-1]));
+					indexes.add(kk);
+					Hb.add(1-Math.abs(mainProgram.cb[i]-mainProgram.freq[indexes.lastElement()])/(mainProgram.cb[i+1]-mainProgram.cb[i-1]));
 				}
 				++kk;
 			}
 			double summa = 0;
 			for (int j = 0;j< Hb.size();++j){
-				summa += Hb.get(j)*Math.pow(dataIn[indeksit.get(j)],2.0);
+				summa += Hb.get(j)*Math.pow(dataIn[indexes.get(j)],2.0);
 			}
 			stdb.add(Math.sqrt(1/((double)mainProgram.fftWindow)*summa));
 			gammab.add(Math.pow(stdb.lastElement(),0.33-1.0));

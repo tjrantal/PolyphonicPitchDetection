@@ -1,3 +1,23 @@
+/*
+	This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+	N.B.  the above text was copied from http://www.gnu.org/licenses/gpl.html
+	unmodified. I have not attached a copy of the GNU license to the source...
+
+    Copyright (C) 2011-2012 Timo Rantalainen
+*/
+
 package Capture;
 
 import ui.*; /*Import ui*/
@@ -21,6 +41,7 @@ public class Capture implements Runnable{
 		bitDepth = bitDepthIn;
 		bitSelection = bitDepth/8;
 		this.mainProgram = mainProgram;
+		mainProgram.rawFigure.f0s = null;
 		stereo = 1; /*Capture mono*/
 	}
 	
@@ -35,11 +56,11 @@ public class Capture implements Runnable{
 					int bufferSize = mainProgram.fftWindow*bitSelection*stereo;
 					byte buffer[] = new byte[bufferSize];
 					while (mainProgram.continueCapturing) {
-						int count = line.read(buffer, 0, buffer.length);
+						int count = line.read(buffer, 0, buffer.length); /*Blocking call to read*/
 						if (count > 0) {
 							if (bitSelection ==1){
 								mainProgram.rawFigure.drawImage(buffer,mainProgram.imWidth,mainProgram.imHeight);
-								/*Add pitch detection here for 8 bit*/							
+								/*Add pitch detection here for 8 bit, not implemented...*/							
 							}
 							if (bitSelection ==2){
 								short[] data = byteArrayToShortArray(buffer);
@@ -67,7 +88,6 @@ public class Capture implements Runnable{
 			short[] shortArray = new short[arrayIn.length/2];
 			for (int i = 0;i<shortArray.length;++i){
 				shortArray[i] = (short) (((((int) arrayIn[2*i+1]) & 0XFF)<< 8) | (((int) arrayIn[2*i]) & 0XFF));
-				//shortArray[i] = (short) (((int) arrayIn[2*i+1])<< 8 | ((int) arrayIn[2*i]));
 			}
 			return shortArray;
 		}

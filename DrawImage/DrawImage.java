@@ -33,7 +33,7 @@ public class DrawImage extends JPanel{
 	public Image imageToDraw;
 	double width;
 	double height;
-	String f0s;
+	public String f0s;
 	DecimalFormat dfo;
 	public DrawImage(){
 		dfo = new DecimalFormat("0.0");
@@ -66,6 +66,20 @@ public class DrawImage extends JPanel{
 	}
 	
 	/*Double trace with F0s*/
+	/*
+	 Dimension size = getSize();
+   g.drawImage(img, 
+    0, 0, size.width, size.height,
+    0, 0, img.getWidth(null), img.getHeight(null),
+    null);
+ 
+   Font font = new Font("Serif", Font.PLAIN, 18);
+   g.setFont(font);
+   g.setColor(Color.black);
+   g.setFont(font);
+   g.drawString(
+	*/
+	
 	public void drawImage(double[] traceIn,int widthIn, int heightIn,double maximum, Vector<Double> F0s) { 
 		int[] image = new int[widthIn*heightIn];
       int pixel;
@@ -92,7 +106,7 @@ public class DrawImage extends JPanel{
 				f0s += "F"+i+" "+dfo.format(F0s.get(i))+" ";
 			}
 	   }
-		System.out.println(f0s);
+	   //System.out.println(f0s);
       //imageToDraw= imageToDraw.getScaledInstance(500, -1, Image.SCALE_SMOOTH);
 		repaint();
 	}
@@ -174,13 +188,13 @@ public class DrawImage extends JPanel{
 	
 	public void paint(Graphics g) {
 		g.drawImage(imageToDraw,0,0,null);
-		/*
-		if (f0s.length()>0){
+
+		if (f0s!=null){
 			g.setColor(new Color(255,0,0));
 			g.setFont(new Font("Helvetica",Font.PLAIN,12));
 		   g.drawString(f0s,25,25);
       }
-      */
+      
 	}
 
 } 
