@@ -119,9 +119,11 @@ public class PolyphonicPitchDetection extends JPanel implements ActionListener {
 			for (int b = 0;b<32;++b){
 		 		cb[b] = 229.0*(Math.pow(10.0,(((double) (b+1))/21.4))-1.0); //frequency division
 			}
-			/*Frequencies, always the same after capture init...*/
-			freq = new double[(int) Math.floor((double) fftWindow/2.0)];
-			for (int b = 0;b<Math.floor((double) fftWindow/2.0);b++){
+			/*Frequencies, always the same after capture init...
+			captured signal will be zero padded to twice its length
+			*/
+			freq = new double[(int) Math.floor((double) fftWindow)];
+			for (int b = 0;b<Math.floor((double) fftWindow);b++){
 				freq[b] = (double) b*(double)samplingRate/(double) fftWindow;
 			}
 			int temp = 0;

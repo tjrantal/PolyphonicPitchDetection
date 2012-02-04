@@ -11,9 +11,13 @@ public class Analysis{
 		/*Apply Hann windowing function*/ 
 		hanData = hannWindow(dataIn);
 		/*Append zeros*/
-		Complex[] x = new Complex[hanData.length];
-        for (int i = 0; i < hanData.length; ++i) {
-            x[i] = new Complex(hanData[i], 0);
+		Complex[] x = new Complex[hanData.length*2];
+        for (int i = 0; i < hanData.length*2.0; ++i) {
+        		if (i >= hanData.length){
+        			x[i] = new Complex(0.0,0.0);	//Zero padding
+        		}else{
+            	x[i] = new Complex(hanData[i], 0);
+            }
         }
         Complex[] y = FFT.fft(x); //Calculate FFT
 		 amplitudes = FFT.calculateAmplitudes(y);

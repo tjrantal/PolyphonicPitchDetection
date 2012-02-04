@@ -135,7 +135,10 @@ public class Klapuri{
 			++kk;
 		}
 		//Pre whitening done
-	
+		/*Add the higher frequencies wihtout whitening*/
+		for (int i = gammab.size();i<whitened.length;++i){
+			whitened[i] = dataIn[i];
+		}
 		return whitened;
 	}
 }
