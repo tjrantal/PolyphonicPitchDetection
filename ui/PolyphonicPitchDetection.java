@@ -37,9 +37,16 @@ SelectROI.java
 AnalyzeRoi.java			//Analysis calculations
 
 JAVA compilation:
-javac ui.PolyphonicPitchDetection.java 
+javac -cp '.:' ui/PolyphonicPitchDetection.java \
+Capture/Capture.java \
+DrawImage/DrawImage.java \
+Analysis/Analysis.java \
+Analysis/Complex.java \
+Analysis/FFT.java \
+Analysis/Functions.java \
+Analysis/Klapuri.java  
 JAR building:
-jar cfe pQCT.jar ui.PolyphonicPitchDetection ui DrawImage Analyse Capture
+jar cfe PolyphonicPitchDetection.jar ui.PolyphonicPitchDetection ui DrawImage Analysis Capture
 
 */
 package ui;
