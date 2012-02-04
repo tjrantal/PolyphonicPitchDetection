@@ -122,6 +122,31 @@ public class DrawImage extends JPanel{
 		repaint();
 	}
 	
+		/*Double trace*/
+	public void drawImage(double[] traceIn,int widthIn, int heightIn) { 
+		int[] image = new int[widthIn*heightIn];
+      int pixel;
+      int min =0;
+      int max = 1;
+      int x;
+      int y;
+      for (int i = 0; i<widthIn*heightIn;++i){
+      	image[i] = 255<<24 | 0 <<16| 0 <<8| 0; 
+      }
+      for (int i = 0; i < traceIn.length;++i) {
+         x = (int) Math.floor(((double)  i/(double) traceIn.length)*widthIn);
+			y = (int) Math.floor(((traceIn[i]/Math.pow(2.0,16.0))+0.5)*heightIn);
+			if (x == widthIn) x = widthIn-1;
+			if (x < 0) x = 0;
+			if (y == heightIn) y = heightIn-1;
+			if (y < 0) y = 0;
+			image[x+y*widthIn]= 255<<24 | 255 <<16| 255 <<8| 255; 
+		}
+      imageToDraw = createImage(new MemoryImageSource(widthIn,heightIn,image,0,widthIn));
+      //imageToDraw= imageToDraw.getScaledInstance(500, -1, Image.SCALE_SMOOTH);
+		repaint();
+	}
+	
 	/*Byte trace*/
 	public void drawImage(byte[] traceIn,int widthIn, int heightIn) { 
 		int[] image = new int[widthIn*heightIn];

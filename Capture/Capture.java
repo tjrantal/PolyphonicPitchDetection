@@ -17,10 +17,10 @@ public class Capture implements Runnable{
 	int bitSelection;
 	int stereo;
 	/*Constructor*/
-	public Capture(int bitDepthIn, PolyphonicPitchDetection mainProgramIn){
+	public Capture(int bitDepthIn, PolyphonicPitchDetection mainProgram){
 		bitDepth = bitDepthIn;
 		bitSelection = bitDepth/8;
-		mainProgram = mainProgramIn;
+		this.mainProgram = mainProgram;
 		stereo = 1; /*Capture mono*/
 	}
 	
@@ -43,9 +43,10 @@ public class Capture implements Runnable{
 							}
 							if (bitSelection ==2){
 								short[] data = byteArrayToShortArray(buffer);
-								mainProgram.rawFigure.drawImage(data,mainProgram.imWidth,mainProgram.imHeight);
+								//mainProgram.rawFigure.drawImage(data,mainProgram.imWidth,mainProgram.imHeight);
 								/*Add pitch detection here for 16 bit*/
 								Analysis analysis = new Analysis(data,mainProgram);	//FFT + klapuri analysis
+								mainProgram.rawFigure.drawImage(analysis.hanData,mainProgram.imWidth,mainProgram.imHeight);
 								/*
 								mainProgram.fftFigure.drawImage(analysis.amplitudes,mainProgram.imWidth,mainProgram.imHeight,analysis.maximum);
 								*/

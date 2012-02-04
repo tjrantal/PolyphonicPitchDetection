@@ -3,13 +3,17 @@ import ui.*;
 public class Analysis{
 	/*Implement analysis here*/
 	public double[] amplitudes;
+	public double[] hanData;
 	public double maximum;
 	public double whitenedMaximum;
 	public Klapuri klapuri;
 	public Analysis(short[] dataIn,PolyphonicPitchDetection mainProgram){
-		Complex[] x = new Complex[dataIn.length];
-        for (int i = 0; i < dataIn.length; ++i) {
-            x[i] = new Complex((double) dataIn[i], 0);
+		/*Apply Hann windowing function*/ 
+		hanData = hannWindow(dataIn);
+		/*Append zeros*/
+		Complex[] x = new Complex[hanData.length];
+        for (int i = 0; i < hanData.length; ++i) {
+            x[i] = new Complex(hanData[i], 0);
         }
         Complex[] y = FFT.fft(x); //Calculate FFT
 		 amplitudes = FFT.calculateAmplitudes(y);
@@ -21,6 +25,16 @@ public class Analysis{
 		 }
 	}
 	
-
+	/*Hann window function taken from http://en.wikipedia.org/wiki/Window_function
+		w(n) = 0.5(1-cos(2pin/(N-1))
+	*/
+	double[] hannWindow(short[] dataIn){
+		double[] hanData = new double[dataIn.length];
+		double N = (double) dataIn.length;
+		for (int i = 0;i<dataIn.length;++i){
+			hanData[i] = ((double) dataIn[i])*0.5*(1-Math.cos(2.0*Math.PI*(double) i/(N-1)));
+		}
+		return hanData;
+	}
 }
 

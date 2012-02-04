@@ -1,5 +1,5 @@
 /*
-Written by Timo Rantalainen tjrantal@gmail.com 2010 (C++ version) - 2011 (Java version)
+Written by Timo Rantalainen tjrantal@gmail.com 2010 (C++ version) - 2012 (Java version)
 Based on Anssi Klapuri's (list of publications http://www.cs.tut.fi/~klap/iiro/ and http://www.elec.qmul.ac.uk/people/anssik/publications.htm) Congress publication
 Klapuri, A., " Multiple fundamental frequency estimation by summing harmonic amplitudes," 7th International Conference on Music Information Retrieval (ISMIR-06), Victoria, Canada, Oct. 2006. 
 http://www.cs.tut.fi/sgn/arg/klap/klap2006ismir.pdf
@@ -44,7 +44,7 @@ import java.awt.image.DataBuffer;
 import Capture.*;	//Sound capture
 import DrawImage.*;		//Drawing images
 
-/*implements AL antaa mahdollisuuden kayttaa eventtteja koneelta. Kayttis toteuttaa...*/
+/*implements AL antaa mahdollisuuden kayttaa eventteja koneelta. Kayttis toteuttaa...*/
 /*extends = inherit, voi peria vain yhden*/
 public class PolyphonicPitchDetection extends JPanel implements ActionListener {	
 	JButton beginPitchDetection;

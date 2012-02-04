@@ -1,5 +1,6 @@
-javac -cp '.:' ui/PolyphonicPitchDetection.java
-javac -cp '.:' Analysis/Analysis.java
-javac -cp '.:' Analysis/Klapuri.java
-javac -cp '.:' DrawImage/DrawImage.java
+javac -cp '.:' ui/PolyphonicPitchDetection.java \
+Analysis/Analysis.java \
+Analysis/Klapuri.java \
+Capture/Capture.java \
+DrawImage/DrawImage.java
 java -cp '.:' ui.PolyphonicPitchDetection
