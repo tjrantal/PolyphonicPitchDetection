@@ -1,0 +1,5 @@
+Octave implementation of the Java Polyphonic pitch detection software to try to find the bugs. 
+
+Copied Sanders and Weis "Synthesizing a Guitar Using Physical Modeling Techniques" (http://www.ee.columbia.edu/~ronw/dsp/ visited 9th November 2013) matlab code that synthesizes (acoustic) guitar based on waveguide model and a recorded excitation signal (which I copied without permission as well the "excite-picked-nodamp.wav"-file). Made minimal modifications to produce test signals for polyphonic pitch detection.
+
+Written by Timo Rantalainen tjrantal at gmail dot com 2013. GPL 3.0 or above applies to the code.
