@@ -9,17 +9,18 @@ constants.desiredPitchDetectionSampleLength = 0.1; %Seconds
 constants.fftWindow = 2^nextpow2(constants.samplingRate*constants.desiredPitchDetectionSampleLength);
 constants.actualSL = constants.fftWindow/constants.samplingRate;
 constants = createConstants(constants);
-keyboard;
-
 constants.fh = figure('position',[10 10 1000 500]);
-constants.sp(1) = subplot(2,1,1)
+constants.sp(1) = subplot(3,1,1);
 plot(test);
 hold on;
-constants.overlayH = plot(1:fftWindow,test(1:fftWindow),'r');
-constants.sp(2) = subplot(2,1,2);
-constants.fftH = plot(zeros(1,fftWindow*2));%plot(freqs,zeros(1,fftWindow*2));
-for i = 1:fftWindow/2:length(test)-fftWindow;
-	constants.epoch = i:i+fftWindow-1;
+constants.overlayH = plot(1:constants.fftWindow,test(1:constants.fftWindow),'r');
+constants.sp(2) = subplot(3,1,2);
+constants.freqVisualizationIndices = find(constants.freq <=10000);
+constants.fftH = plot(constants.freq(constants.freqVisualizationIndices),zeros(1,length(constants.freqVisualizationIndices)));
+constants.sp(3) = subplot(3,1,3);
+constants.whitenedH = plot(constants.freq(constants.freqVisualizationIndices),zeros(1,length(constants.freqVisualizationIndices)));
+for i = 1:constants.fftWindow/2:length(test)-constants.fftWindow;
+	constants.epoch = i:i+constants.fftWindow-1;
 	polyphonicPitchDetect(test(constants.epoch),constants);
 	disp(num2str(i));
 end
