@@ -33,6 +33,7 @@ function constants = createConstants(constantsIn)
 	end
 	
 
-	constants.f0index = find(constants.freq <= 1500 && constants.freq >=60);
+	constants.f0index = find(constants.freq <= 1500 & constants.freq >=60);
 	constants.f0cands = constants.freq(constants.f0index);
+	constants.harmonics = 20;
 endfunction
