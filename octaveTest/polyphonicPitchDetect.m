@@ -9,7 +9,7 @@ function pitch = polyphonicPitchDetect(signalIn,constants)
 	fftSignal = fft(appended);
 	fftSignal= fftSignal./(length(fftSignal)/2+1);
     fftSignal(1) = fftSignal(1)/2;
-	fftAmp = abs(fftSignal);
+	fftAmp = abs(fftSignal(1:constants.fftWindow)); %Ignore the second half of the fft
 	whitened = whiten(fftAmp,constants);
 	set(constants.overlayH,'xdata',constants.epoch,'ydata',signalIn);
 	set(constants.fftH,'ydata',fftAmp(constants.freqVisualizationIndices));
