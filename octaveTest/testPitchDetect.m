@@ -1,9 +1,16 @@
+clear all;
+close all;
+clc;
+
 test = wavread('chord.wav');
 constants = struct();
-constants.samplingFreq = 44100;	%Hz
+constants.samplingRate = 44100;	%Hz
 constants.desiredPitchDetectionSampleLength = 0.1; %Seconds
-constants.fftWindow = 2^nextpow2(samplingFreq*desiredPitchDetectionSampleLength);
-constants.actualSL = fftWindow/samplingFreq;
+constants.fftWindow = 2^nextpow2(constants.samplingRate*constants.desiredPitchDetectionSampleLength);
+constants.actualSL = constants.fftWindow/constants.samplingRate;
+constants = createConstants(constants);
+keyboard;
+
 constants.fh = figure('position',[10 10 1000 500]);
 constants.sp(1) = subplot(2,1,1)
 plot(test);
