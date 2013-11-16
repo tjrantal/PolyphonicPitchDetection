@@ -21,17 +21,4 @@ function whitened = whiten(dataIn,constants)
 		end
 		%Whiten the signal
 		whitened = gamma.*dataIn;
-		
-		figure
-		subplot(3,1,1)
-		plot(constants.freq(find(constants.freq >= constants.cb(1),1,'first'):find(constants.freq >= constants.cb(32),1,'first')),whitened(find(constants.freq >= constants.cb(1),1,'first'):find(constants.freq >= constants.cb(32),1,'first')));
-		subplot(3,1,2)
-		plot(constants.freq(find(constants.freq >= constants.cb(1),1,'first'):find(constants.freq >= constants.cb(32),1,'first')),gamma(find(constants.freq >= constants.cb(1),1,'first'):find(constants.freq >= constants.cb(32),1,'first')));
-		subplot(3,1,3)
-		plot(constants.freq(find(constants.freq >= constants.cb(1),1,'first'):find(constants.freq >= constants.cb(32),1,'first')),dataIn(find(constants.freq >= constants.cb(1),1,'first'):find(constants.freq >= constants.cb(32),1,'first')));
-		figure
-		plot(dataIn./max(dataIn));
-		hold on;
-		plot(whitened./max(whitened),'r');
-		keyboard
 endfunction
