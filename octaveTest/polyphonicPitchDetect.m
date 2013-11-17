@@ -11,6 +11,10 @@ function pitch = polyphonicPitchDetect(signalIn,constants)
     fftSignal(1) = fftSignal(1)/2;
 	fftAmp = abs(fftSignal(1:constants.fftWindow)); %Ignore the second half of the fft
 	whitened = whiten(fftAmp,constants);
+	tse = getSalience(whitened,constants);
+	salience = getSalience(whitened,constants);
+		[salmax index] = max(salience);
+	pitch = constants.freq(index);
 	set(constants.overlayH,'xdata',constants.epoch,'ydata',signalIn);
 	set(constants.fftH,'ydata',fftAmp(constants.freqVisualizationIndices));
 	set(constants.whitenedH,'ydata',whitened(constants.freqVisualizationIndices)); 

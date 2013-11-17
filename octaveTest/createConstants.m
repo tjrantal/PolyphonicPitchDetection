@@ -36,4 +36,8 @@ function constants = createConstants(constantsIn)
 	constants.f0index = find(constants.freq <= 1500 & constants.freq >=60);
 	constants.f0cands = constants.freq(constants.f0index);
 	constants.harmonics = 20;
+	constants.alpha = 52.0; %Hz
+	constants.beta = 320.0; %Hz
+	constants.dee = 0.89;
+	
 endfunction

@@ -21,6 +21,6 @@ constants.sp(3) = subplot(3,1,3);
 constants.whitenedH = plot(constants.freq(constants.freqVisualizationIndices),zeros(1,length(constants.freqVisualizationIndices)));
 for i = 1:constants.fftWindow/2:length(test)-constants.fftWindow;
 	constants.epoch = i:i+constants.fftWindow-1;
-	polyphonicPitchDetect(test(constants.epoch),constants);
-	disp(num2str(i));
+	detectedf0 = polyphonicPitchDetect(test(constants.epoch),constants);
+	disp(['F0 '  num2str(detectedf0) ' dataIndex ' num2str(i)]);
 end

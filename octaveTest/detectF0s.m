@@ -12,10 +12,8 @@ function F0s = detectF0s(whitened, constants)
 	double summa;
 	while (S.lastElement() >= smax){
 		%Calculating the salience function (the hard way...)
-		salience = zeros(1,length(constants.freq));
-		double salmax = 0;
 		salience = getSalience(whitened,constants);
-
+		[salmax index] = max(salience);
 		
 		%Salience calculated
 		++detectedF0s;
