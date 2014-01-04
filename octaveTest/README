@@ -2,4 +2,14 @@ Octave implementation of the Java Polyphonic pitch detection software to try to 
 
 Copied Sanders and Weis "Synthesizing a Guitar Using Physical Modeling Techniques" (http://www.ee.columbia.edu/~ronw/dsp/ visited 9th November 2013) matlab code that synthesizes (acoustic) guitar based on waveguide model and a recorded excitation signal (which I copied without permission as well the "excite-picked-nodamp.wav"-file). Made minimal modifications to produce test signals for polyphonic pitch detection.
 
+The candidate frequencies need to be re-worked to correspond to actual notes.  I used the fft bins, which probably makes the script unable to detect the actual pitch. 
+
+Candidate frequencies created with the equation (taken from http://www.phy.mtu.edu/~suits/NoteFreqCalcs.html)
+
+f = f0*a^n
+
+where f0 = 55 Hz (a fixed note, which must be defined. I used 55 Hz, since that's the lowest frequency I'm interested in instead of 440 Hz)
+a = 2^(1/12)
+n = the number of half steps from the fixed note
+
 Written by Timo Rantalainen tjrantal at gmail dot com 2013. GPL 3.0 or above applies to the code.

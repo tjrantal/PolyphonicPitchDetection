@@ -8,8 +8,8 @@ function constants = createConstants(constantsIn)
 	end
 	%Frequencies, signal will be zero padded to twice its length
 	constants.freq = zeros(1,constants.fftWindow);
-	b = 1:constants.fftWindow;
-	constants.freq= (b-1)*constants.samplingRate/constants.fftWindow;
+	b = 1:(constants.fftWindow+1);
+	constants.freq= (b-1)*(constants.samplingRate/2)/constants.fftWindow;
 	%Create constants required for polyphonicPitchDetect
 	%CB filtebank
 	constants.cb = zeros(1,32);
@@ -33,9 +33,25 @@ function constants = createConstants(constantsIn)
 	end
 	
 
-	constants.f0index = find(constants.freq <= 1500 & constants.freq >=60);
-	constants.f0cands = constants.freq(constants.f0index);
+	%constants.f0index = find(constants.freq <= 1500 & constants.freq >=60);
+	%constants.f0cands = constants.freq(constants.f0index);
+	%Create actual candidate notes (http://www.phy.mtu.edu/~suits/NoteFreqCalcs.html)
+	n = (1:(5*12))-1;	%Five octaves of candidate notes. Use half step to get out of tune freqs
+	f0 = 55.0;			%Hz, A three octaves below A above the middle C
+	a = 2.0^(1.0/12.0);
+	constants.f0cands = f0*a.^n;
+	%Pre-calculate frequency bins to include for a specific f0 candidate
 	constants.harmonics = 20;
+	halfBinWidth = ((constants.samplingRate/2)/constants.fftWindow)/2;
+	for i = 1:length(constants.f0cands)
+		binIndices = [];
+		for h = 1:constants.harmonics
+			testi = find(constants.freq > (constants.f0cands(i)*h-halfBinWidth) & constants.freq < (constants.f0cands(i)*h+halfBinWidth));
+			binIndices = [binIndices testi];
+		end
+		constants.f0candsFreqBins(i).binInidices = binIndices;
+	end
+	
 	constants.alpha = 52.0; %Hz
 	constants.beta = 320.0; %Hz
 	constants.dee = 0.89;
