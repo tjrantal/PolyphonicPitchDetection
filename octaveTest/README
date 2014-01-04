@@ -12,4 +12,8 @@ where f0 = 55 Hz (a fixed note, which must be defined. I used 55 Hz, since that'
 a = 2^(1/12)
 n = the number of half steps from the fixed note
 
+Usage:
+testChord		%To create the chord.wav for pitch detection
+testPitchDetect	%To detect pitch from the chord.wav
+
 Written by Timo Rantalainen tjrantal at gmail dot com 2013. GPL 3.0 or above applies to the code.
