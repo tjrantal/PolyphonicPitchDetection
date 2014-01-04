@@ -2,6 +2,8 @@ An open source (licensed with GPL 2.0 and above) Java-program to do polyphonic p
 
 I started the project with the hopes of creating polyphonic pitch detection to be used in a Frets of Fire/Guitar Hero type game by pluggin an actual electric guitar into the audio in. Also, tuning guitar with polyphonic pitch detection would be pretty nifty (http://www.tcelectronic.com/polytune.asp).
 
+UPDATE: I started teasing out errors in my implementation using Octave (i.e. re-implemented the algorithm with Octave). I found an error, the candidate frequencies and corresponding saliency calculations needed to be defined in terms of notes of interest instead of the FFT bins (which is what I used in the Java implementation). The octave implementation can be found from the octaveTest folder, and it gave satisfactory results on a synthetic sample (gave some extra F0s, missed some, and gave multiples of the original note at various epochs. Nevertheless, the result matched my expectations much better than what I had with my Java implementation [which was clearly incorrect in retrospect]). I've moved to another country since initiating the project and consequently don't have an electric guitar anymore -> I'm probably not going to fix the Java implementation anytime soon.
+
 I made an attempt to implement a polyphonic pitch detection method described in Anssi Klapuri's (list of publications http://www.cs.tut.fi/~klap/iiro/ and http://www.elec.qmul.ac.uk/people/anssik/publications.htm) congress publication
 Klapuri, A., " Multiple fundamental frequency estimation by summing harmonic amplitudes," 7th International Conference on Music Information Retrieval (ISMIR-06), Victoria, Canada, Oct. 2006. 
 http://www.cs.tut.fi/sgn/arg/klap/klap2006ismir.pdf
@@ -12,7 +14,7 @@ Klapuri, A. " Signal processing methods for the automatic transcription of music
 Contributions from other people taken from the internet (in addition to Java-tutorials for GUI, sound capture etc.)
 FFT-transform	http://introcs.cs.princeton.edu/java/97data/FFT.java.html
 		
-Written by Timo Rantalainen tjrantal at gmail dot com 2011 - 2012. Please let me know if you improve the code and make it work!
+Written by Timo Rantalainen tjrantal at gmail dot com 2011 - 2014. Please let me know if you improve the code and make it work!
 
 JAVA compilation (in Linux):
 javac -cp '.:' ui/PolyphonicPitchDetection.java \
