@@ -19,7 +19,7 @@ function constants = createConstants(constantsIn)
 	%Pre-calculate the frequency bank
 	%Signal whitening approach from Kalpuri 2006 page 2, heading 2.1
 	%Create the bandpass filterbank, 30 triangular power response filters
-	constants.Hb = zeros(constants.fftWindow,length(constants.cb)-2);
+	constants.Hb = zeros(constants.fftWindow+1,length(constants.cb)-2);
 	for i=2:(length(constants.cb)-1) %Consider the centrebands, triangle from (i-1:i+1)
 		kk=find(constants.freq >=constants.cb(i-1),1,'first'); %The lower border
 		while (constants.freq(kk) <= constants.cb(i+1))	%loop till the higher border
@@ -49,7 +49,7 @@ function constants = createConstants(constantsIn)
 			testi = find(constants.freq > (constants.f0cands(i)*h-halfBinWidth) & constants.freq < (constants.f0cands(i)*h+halfBinWidth));
 			binIndices = [binIndices testi];
 		end
-		constants.f0candsFreqBins(i).binInidices = binIndices;
+		constants.f0candsFreqBins(i).binIndices = binIndices;
 	end
 	
 	constants.alpha = 52.0; %Hz

@@ -10,7 +10,7 @@ function whitened = whiten(dataIn,constants)
 			gammab(i) = stdb(i)^(0.33-1);
 		end
 		%Interpolate gammab
-		gamma = zeros(1,constants.fftWindow);
+		gamma = zeros(1,constants.fftWindow+1);
 		%Set the compression coefficients for prior to below the first centre band and above the final
 		gamma(1:find(constants.freq >= constants.cb(2),1,'first')) = gammab(1);
 		gamma(find(constants.freq >= constants.cb(31),1,'first'):length(gamma)) = gammab(length(gammab));
