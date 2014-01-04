@@ -29,8 +29,8 @@ function pitches = polyphonicPitchDetect(signalIn,constants)
 		S = [S sumDetected/(detectedF0s^0.7)];
 		if S(length(S)) > smax
 			smax = S(length(S));
+			pitches(detectedF0s ) = constants.f0cands(index);
 		end
-		pitches(detectedF0s ) = constants.f0cands(index);
 	end
 	%Polyphony and pitches estimated
 	set(constants.overlayH,'xdata',constants.epoch,'ydata',signalIn);

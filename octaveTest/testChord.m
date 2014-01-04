@@ -33,18 +33,20 @@ fs = 44100;
 %loop filter:
 Bpoles = [0.8995 0.1087];
 Apoles = [1 0.0136];
+noteOnMultiplier = 3;%1;%
+
 
 o = 2;   %octave
 nd = .3; %note duration
 p = .9;  %pluck position
 
 %testNote = kspluck(E(o), nd, fs, e, B, A, p);
-note1 = kspluck(E(o), 3*nd, fs, e, Bpoles, Apoles, p);	%82.410Hz
-note2 = kspluck(B(o+1), 3*nd, fs, e, Bpoles, Apoles, p);	%123.48
-note3 = kspluck(E(o+1), 3*nd, fs, e, Bpoles, Apoles, p);	%164.82
+note1 = kspluck(E(o), noteOnMultiplier*nd, fs, e, Bpoles, Apoles, p);	%82.410Hz
+note2 = kspluck(B(o+1), noteOnMultiplier*nd, fs, e, Bpoles, Apoles, p);	%123.48
+note3 = kspluck(E(o+1), noteOnMultiplier*nd, fs, e, Bpoles, Apoles, p);	%164.82
 
 %Add delays...
-delayPadding = zeros(1,int32(fs*0.1));
+delayPadding = zeros(1,int32(fs*nd/noteOnMultiplier));
 note1 = [note1 delayPadding delayPadding];
 note2 = [delayPadding note2 delayPadding];
 note3 = [delayPadding delayPadding note3];
