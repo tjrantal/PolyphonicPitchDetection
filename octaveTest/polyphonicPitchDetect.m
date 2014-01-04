@@ -1,4 +1,4 @@
-function pitch = polyphonicPitchDetect(signalIn,constants)
+function pitches = polyphonicPitchDetect(signalIn,constants)
 	%Apply hann windowing
 	hannWindowed = signalIn.*hanning(length(signalIn));
 	%Double the signal length by appending zeroes
@@ -11,11 +11,31 @@ function pitch = polyphonicPitchDetect(signalIn,constants)
     fftSignal(1) = fftSignal(1)/2;
 	fftAmp = abs(fftSignal(1:(constants.fftWindow+1))); %Ignore the second half of the fft
 	whitened = whiten(fftAmp,constants);
-	salience = getSalience(whitened,constants);
+	%Implement estimating polyphony and frequency cancellation here
+	pitches = [];
+	detectedF0s = 0;
+	detectedFreqs = zeros(size(whitened,1),size(whitened,2));
+	smax = 0;
+	S = [];
+	S(1) = 0;
+	%Loop while smax is increasing
+	while S(length(S)) >=smax
+		salience = getSalience(whitened,constants);
 		[salmax index] = max(salience);
-	pitch = constants.f0cands(index);
+		[whitened detectedFreqs] = cancelPitch(whitened,detectedFreqs,constants,index);
+		%estimate smax here
+		detectedF0s = detectedF0s+1;
+		sumDetected = sum(detectedFreqs);
+		S = [S sumDetected/(detectedF0s^0.7)];
+		if S(length(S)) > smax
+			smax = S(length(S));
+		end
+		pitches(detectedF0s ) = constants.f0cands(index);
+	end
+	%Polyphony and pitches estimated
 	set(constants.overlayH,'xdata',constants.epoch,'ydata',signalIn);
 	set(constants.fftH,'ydata',fftAmp(constants.freqVisualizationIndices));
-	set(constants.whitenedH,'ydata',whitened(constants.freqVisualizationIndices)); 
+	set(constants.whitenedH,'ydata',whitened(constants.freqVisualizationIndices));
+	set(constants.detectedH,'ydata',detectedFreqs(constants.freqVisualizationIndices));
 	drawnow();
 endfunction

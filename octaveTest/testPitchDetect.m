@@ -19,8 +19,14 @@ constants.freqVisualizationIndices = find(constants.freq <=10000);
 constants.fftH = plot(constants.freq(constants.freqVisualizationIndices),zeros(1,length(constants.freqVisualizationIndices)));
 constants.sp(3) = subplot(3,1,3);
 constants.whitenedH = plot(constants.freq(constants.freqVisualizationIndices),zeros(1,length(constants.freqVisualizationIndices)));
+hold on;
+constants.detectedH = plot(constants.freq(constants.freqVisualizationIndices),zeros(1,length(constants.freqVisualizationIndices)),'r');
 for i = 1:constants.fftWindow/2:length(test)-constants.fftWindow;
 	constants.epoch = i:i+constants.fftWindow-1;
-	detectedf0 = polyphonicPitchDetect(test(constants.epoch),constants);
-	disp(['F0 '  num2str(detectedf0) ' dataIndex ' num2str(i)]);
+	detectedF0s = polyphonicPitchDetect(test(constants.epoch),constants);
+	printF0s = "";
+	for j = 1:length(detectedF0s)
+		printF0s = [printF0s ' F' num2str(j-1) ' ' num2str(detectedF0s(j))];
+	end
+	disp(printF0s);
 end
