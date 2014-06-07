@@ -16,21 +16,7 @@ FFT-transform	http://introcs.cs.princeton.edu/java/97data/FFT.java.html
 		
 Written by Timo Rantalainen tjrantal at gmail dot com 2011 - 2014. Please let me know if you improve the code and make it work!
 
-JAVA compilation (in Linux):
-javac -cp '.:' ui/PolyphonicPitchDetection.java \
-Capture/Capture.java \
-DrawImage/DrawImage.java \
-Analysis/Analysis.java \
-Analysis/Complex.java \
-Analysis/FFT.java \
-Analysis/Functions.java \
-Analysis/Klapuri.java 
-
-Execute:
-java -cp '.:' ui.PolyphonicPitchDetection
-
-JAR:
-jar cfm PolyphonicPitchDetection.jar MANIFEST.MF ui DrawImage Analysis Capture
+Use the ant build.xml to build the project and to create a jar. 
 
 Execute JAR:
 java -jar PolyphonicPitchDetection.jar
