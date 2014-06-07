@@ -1,6 +1,7 @@
 /*Copied from http://introcs.cs.princeton.edu/java/97data/FFT.java.html 15.07.2011
 linked from http://introcs.cs.princeton.edu/java/97data/
-Modified minimally by Timo Rantalainen 2011
+Modified for reconstructing the signal from N first coefficients by
+Timo Rantalainen 2011
 */
 
 /*
@@ -21,7 +22,7 @@ Modified minimally by Timo Rantalainen 2011
 	unmodified. I have not attached a copy of the GNU license to the source...
 	Also, The licensing might not apply to the work I've simply copied from the
 	web page indicated on the top of this file.
-
+   
     Copyright (C) 2011 Timo Rantalainen
 */
 
@@ -48,9 +49,9 @@ Modified minimally by Timo Rantalainen 2011
 
  
  
- package Analysis;
+ package timo.tuner.Analysis;
  
-public class FFT {
+public class FFT_fit {
 
     // compute the FFT of x[], assuming its length is a power of 2
     public static Complex[] fft(Complex[] x) {
@@ -88,6 +89,52 @@ public class FFT {
     }
 
 
+    // compute the inverse FFT of x[], assuming its length is a power of 2
+    public static Complex[] ifft(Complex[] x) {
+        int N = x.length;
+        Complex[] y = new Complex[N];
+
+        // take conjugate
+        for (int i = 0; i < N; i++) {
+            y[i] = x[i].conjugate();
+        }
+
+        // compute forward FFT
+        y = fft(y);
+
+        // take conjugate again
+        for (int i = 0; i < N; i++) {
+            y[i] = y[i].conjugate();
+        }
+
+        // divide by N
+        for (int i = 0; i < N; i++) {
+            y[i] = y[i].times(1.0 / N);
+        }
+
+        return y;
+
+    }
+
+    // display an array of Complex numbers to standard output
+    public static void show(Complex[] x, String title) {
+        System.out.println(title);
+        System.out.println("-------------------");
+        for (int i = 0; i < x.length; i++) {
+            System.out.println(x[i]);
+        }
+        System.out.println();
+    }
+	
+	public static void show(double[] x, String title) {
+        System.out.println(title);
+        System.out.println("-------------------");
+        for (int i = 0; i < x.length; i++) {
+            System.out.println(x[i]);
+        }
+        System.out.println();
+    }
+	
 	/*Reconstruct the original signal from N first coefficients*/
 	public static double[] reconstruct(Complex[] y,int N){
 		int length = y.length;
@@ -105,7 +152,7 @@ public class FFT {
 	
 	/*Calculate the amplitudes*/
 	public static double[] calculateAmplitudes(Complex[] y){
-		int N = y.length/2+1;
+		int N = y.length;
 		double[] amplitudes = new double[N];
 		amplitudes[0] = y[0].abs()/((double)N);
 		for (int i = 1; i < N; i++) {
@@ -113,4 +160,34 @@ public class FFT {
         }
 		return amplitudes;
 	}
+	
+    public static void main(String[] args) { 
+        int N = Integer.parseInt(args[0]);
+        Complex[] x = new Complex[N];
+
+        // original data
+        for (int i = 0; i < N; i++) {
+            //x[i] = new Complex(0.5*Math.sin(((double)i)*5*2*Math.PI/((double)N))+2, 0);
+			x[i] = new Complex(Math.sin(((double)i)*2*Math.PI/((double)N))+1, 0);
+        }
+        show(x, "x");
+
+		
+        // FFT of original data
+        Complex[] y = fft(x);
+		/*
+        show(y, "y = fft(x)");
+		*/
+		
+		//Show the amplitudes
+		double[] amplitudes = calculateAmplitudes(y);
+		show(amplitudes,"amplitudes");
+		
+		//Reconstruct according to N first coefficients
+		int N2 = 8;
+		double[] reconstructed = reconstruct(y,N2);
+		show(reconstructed,"Reconstructed "+N2);
+
+    }
+
 }

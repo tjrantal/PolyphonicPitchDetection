@@ -18,8 +18,8 @@
     Copyright (C) 2011-2012 Timo Rantalainen
 */
 
-package Analysis;
-import ui.*;
+package timo.tuner.Analysis;
+import timo.tuner.ui.*;
 public class Analysis{
 	/*Implement analysis here*/
 	public double[] amplitudes;

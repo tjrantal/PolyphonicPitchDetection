@@ -49,7 +49,7 @@ JAR building:
 jar cfe PolyphonicPitchDetection.jar ui.PolyphonicPitchDetection ui DrawImage Analysis Capture
 
 */
-package ui;
+package timo.tuner.ui;
 import javax.swing.*;		//GUI commands swing
 import java.awt.event.*; 	//Events & Actionlistener
 import java.io.*;				//File IO
@@ -68,8 +68,8 @@ import java.awt.image.*;
 import java.awt.image.DataBuffer;
 
 //import Analysis.*;	//Polyphonic analysis
-import Capture.*;	//Sound capture
-import DrawImage.*;		//Drawing images
+import timo.tuner.Capture.*;	//Sound capture
+import timo.tuner.DrawImage.*;		//Drawing images
 
 public class PolyphonicPitchDetection extends JPanel implements ActionListener {	
 	JButton beginPitchDetection;

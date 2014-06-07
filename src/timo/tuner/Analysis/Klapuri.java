@@ -18,9 +18,9 @@
     Copyright (C) 2011-2012 Timo Rantalainen
 */
 
-package Analysis;
+package timo.tuner.Analysis;
 import java.util.*;
-import ui.*;
+import timo.tuner.ui.*;
 public class Klapuri{
 	public double[] whitened;
 	public Vector<Double> f0s;

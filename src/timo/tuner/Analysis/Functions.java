@@ -19,7 +19,7 @@
 */
 
 
-package Analysis;
+package timo.tuner.Analysis;
 import java.util.*;
 public class Functions{
 	public static double max(double[] data){

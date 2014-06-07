@@ -18,7 +18,7 @@
     Copyright (C) 2011 Timo Rantalainen
 */
 
-package DrawImage;
+package timo.tuner.DrawImage;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;

@@ -1,0 +1,25 @@
+<!-- PolyphonicPitchDetection ANT build system -->
+<project name="PolyphonicPitchDetection" default="jar" basedir=".">
+	<description>
+		Ant build system for PolyphonicPitchDetection
+	</description>
+
+	<!-- set global properties for this build -->
+	<property environment="env"/>
+	<property name="JAVA_HOME" location="${env.JAVA_HOME}" />
+	<property name="javasrc" location="src/" />
+	<property name="build" location="build" />
+	<property name="classes" location="${build}/java" />
+	<!-- Initialize -->
+	<target name="javacompile" description="Compile Java source" >
+		<mkdir dir="${classes}"/>
+		<javac source="1.5" srcdir="${javasrc}" destdir="${classes}" encoding="UTF-8" nowarn="on">
+		</javac>
+	</target>
+  
+	<target name="jar" depends="javacompile" description="Create Jar file" >
+		<jar jarfile="${build}/PolyphonicPitchDetection.jar" basedir="${classes}" manifest="manifest/MANIFEST.MF">
+		</jar>
+	</target>
+  
+</project>

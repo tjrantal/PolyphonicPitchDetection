@@ -30,7 +30,7 @@ linked from http://introcs.cs.princeton.edu/java/97data/
  *  tan(a)       = -6.685231390246571E-6 + 1.0000103108981198i
  *
  *************************************************************************/
-package Analysis;
+package timo.tuner.Analysis;
 public class Complex {
     private final double re;   // the real part
     private final double im;   // the imaginary part

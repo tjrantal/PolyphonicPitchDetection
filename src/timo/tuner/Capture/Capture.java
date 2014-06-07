@@ -18,11 +18,11 @@
     Copyright (C) 2011-2012 Timo Rantalainen
 */
 
-package Capture;
+package timo.tuner.Capture;
 
-import ui.*; /*Import ui*/
-import Analysis.*; /*Import analysis*/
-import DrawImage.*; /*Import DrawImage*/
+import timo.tuner.ui.*; /*Import ui*/
+import timo.tuner.Analysis.*; /*Import analysis*/
+import timo.tuner.DrawImage.*; /*Import DrawImage*/
 import java.io.*;		/*ByteArrayStream*/
 import javax.sound.sampled.*; /*Sound capture*/
 
