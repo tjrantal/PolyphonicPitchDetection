@@ -1,2 +1,3 @@
 Main-Class: timo.tuner.ui.PolyphonicPitchDetection
+Permissions: all-permissions
 
