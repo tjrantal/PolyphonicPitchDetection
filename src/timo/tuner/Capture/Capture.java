@@ -28,7 +28,7 @@ import javax.sound.sampled.*; /*Sound capture*/
 
 public class Capture implements Runnable{
 	/*Implement analysis here*/
-	
+
 	AudioFormat aFormat;
 	TargetDataLine line;
 	DataLine.Info info;
@@ -44,9 +44,9 @@ public class Capture implements Runnable{
 		mainProgram.rawFigure.f0s = null;
 		stereo = 1; /*Capture mono*/
 	}
-	
+
 	public void run() {
-				aFormat = new AudioFormat(mainProgram.samplingRate,bitDepth,stereo,true,false);			
+				aFormat = new AudioFormat(mainProgram.samplingRate,bitDepth,stereo,true,false);
 				info = new DataLine.Info(TargetDataLine.class, aFormat);
 			System.out.println(info);
 			try{
@@ -57,10 +57,11 @@ public class Capture implements Runnable{
 					byte buffer[] = new byte[bufferSize];
 					while (mainProgram.continueCapturing) {
 						int count = line.read(buffer, 0, buffer.length); /*Blocking call to read*/
+						//System.out.println("Got data "+count);
 						if (count > 0) {
 							if (bitSelection ==1){
 								mainProgram.rawFigure.drawImage(buffer,mainProgram.imWidth,mainProgram.imHeight);
-								/*Add pitch detection here for 8 bit, not implemented...*/							
+								/*Add pitch detection here for 8 bit, not implemented...*/
 							}
 							if (bitSelection ==2){
 								short[] data = byteArrayToShortArray(buffer);
@@ -68,22 +69,23 @@ public class Capture implements Runnable{
 								/*Add pitch detection here for 16 bit*/
 								Analysis analysis = new Analysis(data,mainProgram);	//FFT + klapuri analysis
 								mainProgram.rawFigure.drawImage(analysis.hanData,mainProgram.imWidth,mainProgram.imHeight);
+								System.out.println("Updating figure "+data.length);
 								/*
 								mainProgram.fftFigure.drawImage(analysis.amplitudes,mainProgram.imWidth,mainProgram.imHeight,analysis.maximum);
 								*/
 								mainProgram.whitenedFftFigure.drawImage(analysis.klapuri.whitened,mainProgram.imWidth,mainProgram.imHeight,analysis.whitenedMaximum,analysis.klapuri.f0s);
 							}
-								//mainProgram.rawFigure.paintImmediately(0,0,mainProgram.imWidth,mainProgram.imHeight);							
+								//mainProgram.rawFigure.paintImmediately(0,0,mainProgram.imWidth,mainProgram.imHeight);
 							//mainProgram.rawFigure.repaint();
 						}
-						
+
 			  		}
 					line.stop();
 					line.flush();
 					line.close();
 				} catch  (Exception err){	System.err.println("Error: " + err.getMessage());}
 		}
-		
+
 		public static short[] byteArrayToShortArray(byte[] arrayIn){
 			short[] shortArray = new short[arrayIn.length/2];
 			for (int i = 0;i<shortArray.length;++i){

@@ -152,16 +152,8 @@ public class PolyphonicPitchDetection extends JPanel implements ActionListener {
 			for (int b = 0;b<Math.floor((double) fftWindow);++b){
 				freq[b] = (double) b*(double)samplingRate/(double) fftWindow;
 			}
-			int temp = 0;
-			int kk=0;
-			while (freq[kk] <= 1500.0){
-				if (freq[kk] >=60.0){
-					++temp;
-				}
-				kk++;
-			}
 
-			/*
+						/*
 			*Create candidate frequencies here (http://www.phy.mtu.edu/~suits/NoteFreqCalcs.html)
 			*Five octaves of candidate notes. Use quarter a half-step to get out of tune freqs
 			*Lowest freq (f0) = 55.0 Hz, A three octaves below A above the middle C
@@ -169,7 +161,7 @@ public class PolyphonicPitchDetection extends JPanel implements ActionListener {
 			double f0Init = 55;	//Hz
 			double a = Math.pow(2.0,(1.0/12.0));
 			f0cands = new double[5*12*4];	//5 octaves, 12 half-steps per octave, quarter half-steps
-			for (kk = 0;kk<f0cands.length;++kk){
+			for (int kk = 0;kk<f0cands.length;++kk){
 			   f0cands[kk] = f0Init*Math.pow(a,((double)kk)/4.0);
 			}
 

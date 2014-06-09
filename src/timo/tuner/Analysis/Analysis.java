@@ -28,18 +28,18 @@ public class Analysis{
 	public double whitenedMaximum;
 	public Klapuri klapuri;
 	public Analysis(short[] dataIn,PolyphonicPitchDetection mainProgram){
-		/*Apply Hann windowing function*/ 
+		/*Apply Hann windowing function*/
 		hanData = hannWindow(dataIn);
 		/*Append zeros*/
 		Complex[] x = new Complex[hanData.length*2];
-        for (int i = 0; i < hanData.length*2.0; ++i) {
-        		if (i >= hanData.length){
-        			x[i] = new Complex(0.0,0.0);	//Zero padding
-        		}else{
-            	x[i] = new Complex(hanData[i], 0);
-            }
-        }
-        Complex[] y = FFT.fft(x); //Calculate FFT
+	        for (int i = 0; i < hanData.length*2.0; ++i) {
+	        		if (i >= hanData.length){
+	        			x[i] = new Complex(0.0,0.0);	//Zero padding
+	        		}else{
+	            	x[i] = new Complex(hanData[i], 0);
+	            }
+	        }
+	        Complex[] y = FFT.fft(x); //Calculate FFT
 		 amplitudes = FFT.calculateAmplitudes(y);
 		 maximum = Functions.max(amplitudes);
 		 klapuri = new Klapuri(amplitudes,maximum,mainProgram);	//Klapuri picth detection
@@ -48,7 +48,7 @@ public class Analysis{
 		 	whitenedMaximum = 1.0;
 		 }
 	}
-	
+
 	/*Hann window function taken from http://en.wikipedia.org/wiki/Window_function
 		w(n) = 0.5(1-cos(2pin/(N-1))
 	*/
