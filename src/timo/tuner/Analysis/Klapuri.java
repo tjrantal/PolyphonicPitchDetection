@@ -37,10 +37,10 @@ public class Klapuri{
 		whitened = whiten(data,mainProgram);
 		f0s = detectF0s(whitened,mainProgram);
 	}
-	
+
 	Vector<Double> detectF0s(double[] whitened, PolyphonicPitchDetection mainProgram){
 		Vector<Double> F0s = new Vector<Double>();
-		Vector<Double> S = new Vector<Double>();  
+		Vector<Double> S = new Vector<Double>();
 		S.add(0.0);
 		//Begin extracting F0s
 		double smax=0;
@@ -52,27 +52,33 @@ public class Klapuri{
 		double summa;
 		while (S.lastElement() >= smax){
 			//Calculating the salience function (the hard way...)
-			salience = new double [mainProgram.freq.length];
+			salience = new double [mainProgram.f0cands.length];
 			double salmax = 0;
-			
+
 			for (int i= 0;i<mainProgram.f0index.length;++i){
 				summa = 0;
-				for (int j = 1;j <harmonics;++j){
-					if (mainProgram.f0index[i]*j <mainProgram.freq.length){
-						summa +=(mainProgram.samplingRate*mainProgram.freq[mainProgram.f0index[i]*j]+alpha)/(j*mainProgram.samplingRate*mainProgram.freq[mainProgram.f0index[i]*j]+beta)*whitened[mainProgram.f0index[i]*j];
-					}
+				for (int j = 0;j <mainProgram.f0index[i].size();++j){
+						summa +=(mainProgram.samplingRate*mainProgram.freq[mainProgram.f0index[i].get(j)]+alpha)/((j+1)*mainProgram.samplingRate*mainProgram.freq[mainProgram.f0index[i].get(j)]+beta)*whitened[mainProgram.f0index[i].get(j)];
 				}
-				salience[mainProgram.f0index[i]] = summa;
-				if (salience[mainProgram.f0index[i]] > salmax){
-					index= mainProgram.f0index[i];
-					salmax = salience[mainProgram.f0index[i]];
+				salience[i] = summa;
+				if (salience[i] > salmax){
+					index= i;
+					salmax = salience[i];
 				}
 			}
-			
+
 			//Salience calculated
 			++detectedF0s;
-			F0s.add(mainProgram.freq[index]); //First F0
-			
+			F0s.add(mainProgram.f0cands[index]); //First F0
+
+			//Get index in terms of freq
+			index = 0;
+			while (mainProgram.freq[index] < F0s.lastElement()){
+				++index;
+			}
+
+
+			/*Replace this with using f0cands indices at some point!*/
 			//Frequency cancellation
 			for (int j = 1; j<=harmonics;++j){
 				if (index*j+1 <whitened.length){
@@ -108,16 +114,16 @@ public class Klapuri{
 		}
 		return F0s;
 	}
-	
+
 	double[] whiten(double[] dataIn,PolyphonicPitchDetection mainProgram){
 		double[] whitened = new double[dataIn.length];
-			
+
 		/*Calculate signal energies in filter windows??*/
 		Vector<Double> Hb = new Vector<Double>();
 		Vector<Integer> indexes = new Vector<Integer>();
 		Vector<Double> gammab = new Vector<Double>();
 		Vector<Double> stdb = new Vector<Double>();
-		
+
 		int kk;
 		for (int i = 1;i<31;++i){
 			Hb.clear();
