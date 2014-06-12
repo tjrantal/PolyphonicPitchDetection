@@ -2,20 +2,17 @@ clear all;
 close all;
 clc;
 
-%test = wavread('chord.wav');
-
 constants = struct();
 constants.samplingRate = 44100;	%Hz
 tempTime = [0:(constants.samplingRate-1)]/constants.samplingRate; 
 test= zeros(size(tempTime,1),size(tempTime,2));
 for i = 1:20
-	%test = test+(sin(2*pi*82.4*i*tempTime));% ...
-	%test = test+(1/(2+i))*(sin(2*pi*82.4*i*tempTime) %...
-	test = test+(sin(2*pi*82.4*i*tempTime) ...
+	test = test+(1/(2+i))*(sin(2*pi*82.4*i*tempTime) ...
 	+sin(2*pi*123.5*i*tempTime) ...
 	+sin(2*pi*164.8*i*tempTime));
 end
 test = test';
+wavwrite(test,constants.samplingRate,16,'testSound.wav');
 constants.desiredPitchDetectionSampleLength = 0.1; %Seconds
 constants.fftWindow = 2^nextpow2(constants.samplingRate*constants.desiredPitchDetectionSampleLength);
 constants.actualSL = constants.fftWindow/constants.samplingRate;

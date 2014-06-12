@@ -33,7 +33,7 @@ function pitches = polyphonicPitchDetect(signalIn,constants)
 		end
 	end
 	%Polyphony and pitches estimated
-	set(constants.overlayH,'xdata',constants.epoch,'ydata',signalIn);
+	set(constants.overlayH,'xdata',constants.epoch,'ydata',hannWindowed);
 	set(constants.fftH,'ydata',fftAmp(constants.freqVisualizationIndices));
 	set(constants.whitenedH,'ydata',whitened(constants.freqVisualizationIndices));
 	set(constants.detectedH,'ydata',detectedFreqs(constants.freqVisualizationIndices));
