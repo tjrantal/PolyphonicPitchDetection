@@ -55,6 +55,7 @@ public class Capture implements Runnable{
 					line.start();		//Start capturing
 					int bufferSize = mainProgram.fftWindow*bitSelection*stereo;
 					byte buffer[] = new byte[bufferSize];
+					int testC = 0;
 					while (mainProgram.continueCapturing) {
 						int count = line.read(buffer, 0, buffer.length); /*Blocking call to read*/
 						//System.out.println("Got data "+count);
@@ -64,11 +65,43 @@ public class Capture implements Runnable{
 								/*Add pitch detection here for 8 bit, not implemented...*/
 							}
 							if (bitSelection ==2){
-								short[] data = byteArrayToShortArray(buffer);
+							   	short[] data = byteArrayToShortArray(buffer);
+								/*Build test signal*/
+							   	if (true){
+							   	   for (int i = 0;i<data.length;++i){
+							   	      data[i] = 0;
+						   			for (int h =0;h<20;++h){
+						   				data[i] += (short) (1.0/(2.0+((double)h))*
+						   				(
+						   				Math.sin(2.0*Math.PI*((double)(i+testC))/mainProgram.samplingRate*82.4)
+						   				)
+						   				*Math.pow(2.0,12.0)
+						   				);
+
+						   				data[i] += (short) (1.0/(2.0+((double)h))*
+						   				(
+						   				Math.sin(2.0*Math.PI*((double)(i+testC))/mainProgram.samplingRate*123.5)
+						   				)
+						   				*Math.pow(2.0,12.0)
+						   				);
+
+   						   				data[i] += (short) (1.0/(2.0+((double)h))*
+						   				(
+						   				Math.sin(2.0*Math.PI*((double)(i+testC))/mainProgram.samplingRate*164.8)
+						   				)
+						   				*Math.pow(2.0,12.0)
+						   				);
+						   			}
+							   	   	//System.out.print(data[i]+" ");
+							   	   }
+							   	 	++testC;
+							   	}
 								//mainProgram.rawFigure.drawImage(data,mainProgram.imWidth,mainProgram.imHeight);
 								/*Add pitch detection here for 16 bit*/
 								Analysis analysis = new Analysis(data,mainProgram);	//FFT + klapuri analysis
 								mainProgram.rawFigure.drawImage(analysis.hanData,mainProgram.imWidth,mainProgram.imHeight);
+								//mainProgram.rawFigure.drawImage(data,mainProgram.imWidth,mainProgram.imHeight);
+
 								System.out.println("Updating figure "+data.length);
 								/*
 								mainProgram.fftFigure.drawImage(analysis.amplitudes,mainProgram.imWidth,mainProgram.imHeight,analysis.maximum);
@@ -77,6 +110,7 @@ public class Capture implements Runnable{
 							}
 								//mainProgram.rawFigure.paintImmediately(0,0,mainProgram.imWidth,mainProgram.imHeight);
 							//mainProgram.rawFigure.repaint();
+
 						}
 
 			  		}
