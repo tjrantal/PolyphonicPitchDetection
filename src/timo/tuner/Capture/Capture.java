@@ -71,36 +71,37 @@ public class Capture implements Runnable{
 							   	   for (int i = 0;i<data.length;++i){
 							   	      data[i] = 0;
 						   			for (int h =0;h<20;++h){
+
 						   				data[i] += (short) (1.0/(2.0+((double)h))*
 						   				(
-						   				Math.sin(2.0*Math.PI*((double)(i+testC))/mainProgram.samplingRate*82.4)
+						   				Math.sin(2.0*Math.PI*((double)(i+testC))/mainProgram.samplingRate*82.4*((double)h))
 						   				)
-						   				*Math.pow(2.0,12.0)
+						   				*Math.pow(2.0,13.0)
 						   				);
 
 						   				data[i] += (short) (1.0/(2.0+((double)h))*
 						   				(
-						   				Math.sin(2.0*Math.PI*((double)(i+testC))/mainProgram.samplingRate*123.5)
+						   				Math.sin(2.0*Math.PI*((double)(i+testC))/mainProgram.samplingRate*123.5*((double)h))
 						   				)
-						   				*Math.pow(2.0,12.0)
+						   				*Math.pow(2.0,13.0)
 						   				);
 
    						   				data[i] += (short) (1.0/(2.0+((double)h))*
 						   				(
-						   				Math.sin(2.0*Math.PI*((double)(i+testC))/mainProgram.samplingRate*164.8)
+						   				Math.sin(2.0*Math.PI*((double)(i+testC))/mainProgram.samplingRate*164.8*((double)h))
 						   				)
-						   				*Math.pow(2.0,12.0)
+						   				*Math.pow(2.0,13.0)
 						   				);
 						   			}
 							   	   	//System.out.print(data[i]+" ");
 							   	   }
-							   	 	++testC;
+							   	 	//++testC;
 							   	}
 								//mainProgram.rawFigure.drawImage(data,mainProgram.imWidth,mainProgram.imHeight);
 								/*Add pitch detection here for 16 bit*/
 								Analysis analysis = new Analysis(data,mainProgram);	//FFT + klapuri analysis
-								mainProgram.rawFigure.drawImage(analysis.hanData,mainProgram.imWidth,mainProgram.imHeight);
-								//mainProgram.rawFigure.drawImage(data,mainProgram.imWidth,mainProgram.imHeight);
+								//mainProgram.rawFigure.drawImage(analysis.hanData,mainProgram.imWidth,mainProgram.imHeight);
+								mainProgram.rawFigure.drawImage(data,mainProgram.imWidth,mainProgram.imHeight);
 
 								System.out.println("Updating figure "+data.length);
 								/*
