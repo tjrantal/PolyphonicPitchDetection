@@ -72,23 +72,23 @@ public class Capture implements Runnable{
 							   	      data[i] = 0;
 						   			for (int h =0;h<20;++h){
 
-						   				data[i] += (short) (1.0/(2.0+((double)h))*
+						   				data[i] += (short) (1.0/(2.0+1.0+((double)h))*
 						   				(
-						   				Math.sin(2.0*Math.PI*((double)(i+testC))/mainProgram.samplingRate*82.4*((double)h))
+						   				Math.sin(2.0*Math.PI*((double)(i+testC))/mainProgram.samplingRate*82.4*((double)h+1.0))
 						   				)
 						   				*Math.pow(2.0,13.0)
 						   				);
 
-						   				data[i] += (short) (1.0/(2.0+((double)h))*
+						   				data[i] += (short) (1.0/(2.0+1.0+((double)h))*
 						   				(
-						   				Math.sin(2.0*Math.PI*((double)(i+testC))/mainProgram.samplingRate*123.5*((double)h))
+						   				Math.sin(2.0*Math.PI*((double)(i+testC))/mainProgram.samplingRate*123.5*((double)h+1.0))
 						   				)
 						   				*Math.pow(2.0,13.0)
 						   				);
 
-   						   				data[i] += (short) (1.0/(2.0+((double)h))*
+   						   				data[i] += (short) (1.0/(2.0+1.0+((double)h))*
 						   				(
-						   				Math.sin(2.0*Math.PI*((double)(i+testC))/mainProgram.samplingRate*164.8*((double)h))
+						   				Math.sin(2.0*Math.PI*((double)(i+testC))/mainProgram.samplingRate*164.8*((double)h+1.0))
 						   				)
 						   				*Math.pow(2.0,13.0)
 						   				);
