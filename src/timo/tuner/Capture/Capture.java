@@ -61,7 +61,7 @@ public class Capture implements Runnable{
 						//System.out.println("Got data "+count);
 						if (count > 0) {
 							if (bitSelection ==1){
-								mainProgram.rawFigure.drawImage(buffer,mainProgram.imWidth,mainProgram.imHeight);
+								//mainProgram.rawFigure.drawImage(buffer,mainProgram.imWidth,mainProgram.imHeight);
 								/*Add pitch detection here for 8 bit, not implemented...*/
 							}
 							if (bitSelection ==2){
@@ -101,13 +101,18 @@ public class Capture implements Runnable{
 								/*Add pitch detection here for 16 bit*/
 								Analysis analysis = new Analysis(data,mainProgram);	//FFT + klapuri analysis
 								//mainProgram.rawFigure.drawImage(analysis.hanData,mainProgram.imWidth,mainProgram.imHeight);
-								mainProgram.rawFigure.drawImage(data,mainProgram.imWidth,mainProgram.imHeight);
-
+								mainProgram.rawFigure.clearPlot();
+								mainProgram.rawFigure.plotTrace(data);
+								mainProgram.rawFigure.paintImageToDraw();
 								System.out.println("Updating figure "+data.length);
+
+								mainProgram.whitenedFftFigure.clearPlot();
+								mainProgram.whitenedFftFigure.plotTrace(analysis.klapuri.whitened,analysis.whitenedMaximum,1024);
+								mainProgram.whitenedFftFigure.paintImageToDraw();
 								/*
 								mainProgram.fftFigure.drawImage(analysis.amplitudes,mainProgram.imWidth,mainProgram.imHeight,analysis.maximum);
 								*/
-								mainProgram.whitenedFftFigure.drawImage(analysis.klapuri.whitened,mainProgram.imWidth,mainProgram.imHeight,analysis.whitenedMaximum,analysis.klapuri.f0s);
+								//mainProgram.whitenedFftFigure.drawImage(analysis.klapuri.whitened,analysis.whitenedMaximum,analysis.klapuri.f0s);
 							}
 								//mainProgram.rawFigure.paintImmediately(0,0,mainProgram.imWidth,mainProgram.imHeight);
 							//mainProgram.rawFigure.repaint();

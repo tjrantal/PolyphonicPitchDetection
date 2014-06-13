@@ -114,23 +114,16 @@ public class PolyphonicPitchDetection extends JPanel implements ActionListener {
 
 
 		/*Figure for captured sound*/
-		rawFigure = new DrawImage();
-		rawFigure.setBackground(new Color(0, 0, 0));
-		rawFigure.setPreferredSize(new Dimension(imWidth,imHeight));
+		rawFigure = new DrawImage(new Dimension(imWidth,imHeight));
+		//rawFigure.setBackground(new Dimension(imWidth,imHeight));
+		//rawFigure.setPreferredSize(new Dimension(imWidth,imHeight));
 		rawFigure.setOpaque(true);
 		add(rawFigure);
-		/*Figure for fft*/
-		/*
-		fftFigure = new DrawImage();
-		fftFigure.setBackground(new Color(0, 0, 0));
-		fftFigure.setPreferredSize(new Dimension(imWidth,imHeight));
-		fftFigure.setOpaque(true);
-		add(fftFigure);
-		*/
+
 		/*Figure for whitened fft*/
-		whitenedFftFigure = new DrawImage();
-		whitenedFftFigure.setBackground(new Color(0, 0, 0));
-		whitenedFftFigure.setPreferredSize(new Dimension(imWidth,imHeight));
+		whitenedFftFigure = new DrawImage(new Dimension(imWidth,imHeight));
+		//whitenedFftFigure.setBackground(new Dimension(imWidth,imHeight));
+		//whitenedFftFigure.setPreferredSize(new Dimension(imWidth,imHeight));
 		whitenedFftFigure.setOpaque(true);
 		add(whitenedFftFigure);
 		}
