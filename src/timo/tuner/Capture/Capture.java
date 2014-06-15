@@ -68,8 +68,9 @@ public class Capture implements Runnable{
 							}
 							if (bitSelection ==2){
 							   	short[] data = byteArrayToShortArray(buffer);
-								/*Build test signal*/
+
 							   	if (false){
+							   	   /*Build test signal*/
 							   	   double[] tempSignal = new double[data.length];
 							   	   for (int i = 0;i<data.length;++i){
 							   	      tempSignal[i] = 0;
@@ -107,18 +108,20 @@ public class Capture implements Runnable{
 							   	}
 								//mainProgram.rawFigure.drawImage(data,mainProgram.imWidth,mainProgram.imHeight);
 								/*Add pitch detection here for 16 bit*/
+								//System.out.println("To analysis");
 								Analysis analysis = new Analysis(data,mainProgram);	//FFT + klapuri analysis
-
+								//System.out.println("Out of analysis");
 								if (false && testC == 1){
 								   printResult(analysis.klapuri.whitened,new String("whitened.bin"));
 									printResult(analysis.amplitudes,new String("amplitudes.bin"));
+									printResult(analysis.klapuri.gammaCoeff,new String("gamma.bin"));
 								}
 
 								//mainProgram.rawFigure.drawImage(analysis.hanData,mainProgram.imWidth,mainProgram.imHeight);
 								mainProgram.rawFigure.clearPlot();
 								mainProgram.rawFigure.plotTrace(data);
 								mainProgram.rawFigure.paintImageToDraw();
-								System.out.println("Updating figure "+data.length);
+								//System.out.println("Updating figure "+data.length);
 
 								mainProgram.whitenedFftFigure.clearPlot();
 								mainProgram.whitenedFftFigure.plotTrace(analysis.klapuri.whitened,analysis.whitenedMaximum,1024);

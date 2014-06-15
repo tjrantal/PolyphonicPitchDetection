@@ -38,6 +38,4 @@ function pitches = polyphonicPitchDetect(signalIn,constants)
 	set(constants.whitenedH,'ydata',whitened(constants.freqVisualizationIndices));
 	set(constants.detectedH,'ydata',detectedFreqs(constants.freqVisualizationIndices));
 	drawnow();
-	figure,plot(fftAmp(1:1024))
-	figure,plot(whitened(1:1024))
 endfunction

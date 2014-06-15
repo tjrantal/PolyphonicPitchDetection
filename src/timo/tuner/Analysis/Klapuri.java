@@ -23,6 +23,7 @@ import java.util.*;
 import timo.tuner.ui.*;
 public class Klapuri{
 	public double[] whitened;
+	public double[] gammaCoeff;
 	public Vector<Double> f0s;
 	PolyphonicPitchDetection mainProgram;
 	int harmonics = 20;
@@ -71,27 +72,37 @@ public class Klapuri{
 			++detectedF0s;
 			F0s.add(mainProgram.f0cands[index]); //First F0
 
-			//Get index in terms of freq
-			index = 0;
-			while (mainProgram.freq[index] < F0s.lastElement()){
-				++index;
-			}
-
-
 			/*Replace this with using f0cands indices at some point!*/
 			//Frequency cancellation
-			for (int j = 1; j<=harmonics;++j){
-				if (index*j+1 <whitened.length){
+			//System.out.println("To cancellation "+mainProgram.f0index[index].size()+" "+mainProgram.f0indHarm[index].size());
+			int[] tempCancelled = new int[resultsk.length];
+			for (int j = 0; j<mainProgram.f0index[index].size();++j){
+					/*Suppress the surrounding bins as well*/
 					for (int i = -1;i <= 1;++i){
-						resultsk[index*j+i] = resultsk[index*j+i]+(mainProgram.samplingRate*mainProgram.freq[index*j+i]+alpha)/(j*mainProgram.samplingRate*mainProgram.freq[index*j+i]+beta)*whitened[index*j+i];
-						if (whitened[index*j+i]-resultsk[index*j+i] > 0){
-							whitened[index*j+i]= whitened[index*j+i]-resultsk[index*j+i]*dee;
-						}else{
-							whitened[index*j+i]=0;
+						if (tempCancelled[mainProgram.f0index[index].get(j)+i] == 0 && mainProgram.f0index[index].get(j)+i < resultsk.length){
+						   	//System.out.println(mainProgram.f0index[index].get(j)+" "+mainProgram.freq[mainProgram.f0index[index].get(j)]);
+							resultsk[mainProgram.f0index[index].get(j)+i]= resultsk[mainProgram.f0index[index].get(j)+i]
+							+(mainProgram.samplingRate*mainProgram.freq[mainProgram.f0index[index].get(j)+i]+alpha)
+							/
+							(
+							((double)mainProgram.f0indHarm[index].get(j))
+							*mainProgram.samplingRate*mainProgram.freq[mainProgram.f0index[index].get(j)+i]+beta
+							)
+							*whitened[mainProgram.f0index[index].get(j)+i];
+							if (whitened[mainProgram.f0index[index].get(j)+i]-resultsk[mainProgram.f0index[index].get(j)+i] > 0){
+								whitened[mainProgram.f0index[index].get(j)+i]=
+								whitened[mainProgram.f0index[index].get(j)+i]
+								-resultsk[mainProgram.f0index[index].get(j)+i]*dee;
+							}else{
+								whitened[mainProgram.f0index[index].get(j)+i]=0;
+							}
+							tempCancelled[mainProgram.f0index[index].get(j)+i] = 1;
 						}
+
 					}
-				}
+
 			}
+			//System.out.println("Cancellation done");
 			//requency cancellation done
 			//Polyphony estimation
 			if (S.size() < detectedF0s){
@@ -129,24 +140,24 @@ public class Klapuri{
 			for (int j = 0;j< mainProgram.Hb[i].size();++j){
 				tempSum += mainProgram.Hb[i].get(j)*Math.pow(dataIn[mainProgram.hbIndices[i].get(j)],2.0);
 			}
-			stdb.add(Math.sqrt(tempSum/((double)mainProgram.fftWindow)));
+			stdb.add(Math.sqrt(tempSum/((double)dataIn.length)));
 			gammab.add(Math.pow(stdb.lastElement(),0.33-1.0));
 		}
 
 		//Interpolate gammab...
-		double[] gammaCoeff =new double[dataIn.length];
+		gammaCoeff =new double[dataIn.length];
 
 		kk=0;
-		while (mainProgram.freq[kk] < mainProgram.cb[2]){	//Search for the first frequency..
-			++kk;
+		while (mainProgram.freq[kk] < mainProgram.cb[1]){	//Search for the first frequency..
 			gammaCoeff[kk] = gammab.get(0);
+			++kk;
 		}
 		double whitemax=0;
 		for (int i = 0;i<gammab.size()-1;++i){
 		   	int init = ind(mainProgram.freq,mainProgram.cb[i+1]);
 			int end = ind(mainProgram.freq,mainProgram.cb[i+2]);
 			while (kk < end){
-				gammaCoeff[kk] = gammab.get(i)+(gammab.get(i+1)-gammab.get(i))*((double)(kk-init))/((double) (end-init));
+				gammaCoeff[kk] = gammab.get(i)+(gammab.get(i+1)-gammab.get(i))*Math.abs((double)(kk-init))/((double) (end-init));
 				++kk;
 			}
 		}
@@ -162,7 +173,7 @@ public class Klapuri{
 		return whitened;
 	}
 
-	private int ind(double[] arr,double a){
+	public static int ind(double[] arr,double a){
 	 	int b = 0;
 	 	while (arr[b] <a){
 	 		++b;

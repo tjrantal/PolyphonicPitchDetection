@@ -43,13 +43,13 @@ Modified minimally by Timo Rantalainen 2011
  *      an object type for representing complex numbers and because
  *      it re-allocates memory for the subarray, instead of doing
  *      in-place or reusing a single temporary array)
- *  
+ *
  *************************************************************************/
 
- 
- 
+
+
  package timo.tuner.Analysis;
- 
+
 public class FFT {
 
     // compute the FFT of x[], assuming its length is a power of 2
@@ -102,15 +102,16 @@ public class FFT {
 		}
 		return reconstructed;
 	}
-	
+
 	/*Calculate the amplitudes*/
 	public static double[] calculateAmplitudes(Complex[] y){
 		int N = y.length/2+1;
 		double[] amplitudes = new double[N];
-		amplitudes[0] = y[0].abs()/((double)N);
+		amplitudes[0] = y[0].abs()/((double)y.length);
 		for (int i = 1; i < N; i++) {
-            amplitudes[i] = y[i].abs()/((double)N)*2;
-        }
+            	amplitudes[i] = 2.0*y[i].abs()/((double)y.length);
+        	}
+        	amplitudes[N-1] = amplitudes[N-1]/2.0;
 		return amplitudes;
 	}
 }
