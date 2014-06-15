@@ -9,7 +9,7 @@ Klapuri, A. " Signal processing methods for the automatic transcription of music
 
 The current version needs to be restarted sometimes in order to initiate the sound capture (could be specific to my latop and operating system). The current version is able to detect two notes from my electric guitar consistently. I am not likely to improve the implementation substantially, unless I notice some bugs.  
 
-I started the project with the hopes of implementing polyphonic pitch detection to be used in a Frets of Fire/Guitar Hero type game by pluggin an actual electric guitar into the audio in. Also, tuning guitar with polyphonic pitch detection would be pretty nifty (http://www.tcelectronic.com/polytune.asp), or the pitch detection could be used for off-line transcription. The current version has a massive lag on my HP mini laptop, which makes it unsuitable for real-time stuff. 
+I started the project with the hopes of implementing polyphonic pitch detection to be used in a Frets of Fire/Guitar Hero type game by pluggin an actual electric guitar into the audio in. Also, tuning guitar with polyphonic pitch detection would be pretty nifty (http://www.tcelectronic.com/polytune.asp), or the pitch detection could be used for off-line transcription. The current version has a massive lag on my HP mini laptop, which makes it unsuitable for real-time stuff. N.B. the octave implementation in the octaveTest folder might be more useful for off-line transcription (although frequency cancellation isn't implemented similarly to the Java version).
 
 Contributions from other people taken from the internet (in addition to Java-tutorials for GUI, sound capture etc.);
 FFT-transform	http://introcs.cs.princeton.edu/java/97data/FFT.java.html
