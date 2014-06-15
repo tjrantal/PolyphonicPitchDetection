@@ -88,6 +88,8 @@ public class PolyphonicPitchDetection extends JPanel implements ActionListener {
 	public static int h;
 	static int traces = 2;		/*how many traces are we plotting...*/
 	public double[] cb;			/*Klapuri whitening ranges*/
+	public ArrayList<Double>[] Hb;	/*filter bank for whitening*/
+	public ArrayList<Integer>[] hbIndices;	/*filter bank indices for whitening*/
 	public double[] freq;		/*FFT fequency bins*/
 	public double[] f0cands;	/*Klapuri F0 candidates*/
 	public ArrayList<Integer>[] f0index;		/*Klapuri F0 candidate indices*/
@@ -139,14 +141,34 @@ public class PolyphonicPitchDetection extends JPanel implements ActionListener {
 		 		cb[b] = 229.0*(Math.pow(10.0,(((double) (b+1))/21.4))-1.0); //frequency division
 			}
 			/*Frequencies, always the same after capture init...
-			captured signal will be zero padded to twice its length
+			captured signal will be zero padded to twice its length, so valid fft bins are equal to original epoch length
 			*/
 			freq = new double[(int) Math.floor((double) fftWindow)];
 			for (int b = 0;b<Math.floor((double) fftWindow);++b){
-				freq[b] = (double) b*(double)samplingRate/(double) fftWindow;
+				freq[b] = (double) b*(double)(samplingRate/2.0)/(double) fftWindow;
 			}
 
-						/*
+			/*Create filter bank*/
+			 Hb = new ArrayList[30];
+			hbIndices = new ArrayList[30];
+			for (int i = 1;i<31;++i){
+				Hb[i-1] = new ArrayList<Double>();
+				hbIndices[i-1] = new ArrayList<Integer>();
+				int kk=0;
+				while (freq[kk] <= cb[i+1]){
+					if (freq[kk] >= cb[i-1]){
+						hbIndices[i-1] .add(kk);
+						if (freq[kk]<=cb[i]){
+							Hb[i-1].add(1-Math.abs(cb[i]-freq[kk])/(cb[i]-cb[i-1]));
+						}else{
+						   	Hb[i-1].add(1-Math.abs(cb[i]-freq[kk])/(cb[i+1]-cb[i]));
+						}
+					}
+					++kk;
+				}
+			}
+
+			/*
 			*Create candidate frequencies here (http://www.phy.mtu.edu/~suits/NoteFreqCalcs.html)
 			*Five octaves of candidate notes. Use quarter a half-step to get out of tune freqs
 			*Lowest freq (f0) = 55.0 Hz, A three octaves below A above the middle C
@@ -160,15 +182,6 @@ public class PolyphonicPitchDetection extends JPanel implements ActionListener {
 
 			/*
 			*Pre-calculate frequency bins for  a given f0 candidate
-			*	halfBinWidth = ((constants.samplingRate/2)/constants.fftWindow)/2;
-	for i = 1:length(constants.f0cands)
-		binIndices = [];
-		for h = 1:constants.harmonics
-			testi = find(constants.freq > (constants.f0cands(i)*h-halfBinWidth) & constants.freq < (constants.f0cands(i)*h+halfBinWidth));
-			binIndices = [binIndices testi];
-		end
-		constants.f0candsFreqBins(i).binIndices = binIndices;
-	end
 			*/
 			 f0index = new ArrayList[f0cands.length];
 			double halfBinWidth= ((double)samplingRate/(double) fftWindow)/2.0;

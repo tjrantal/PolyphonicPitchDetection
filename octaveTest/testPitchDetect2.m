@@ -13,7 +13,7 @@ for i = 1:20
 end
 test = test';
 wavwrite(test,constants.samplingRate,16,'testSound.wav');
-constants.desiredPitchDetectionSampleLength = 0.1; %Seconds
+constants.desiredPitchDetectionSampleLength = 0.08; %Seconds
 constants.fftWindow = 2^nextpow2(constants.samplingRate*constants.desiredPitchDetectionSampleLength);
 constants.actualSL = constants.fftWindow/constants.samplingRate;
 constants = createConstants(constants);
@@ -38,4 +38,5 @@ for i = 1:constants.fftWindow/2:length(test)-constants.fftWindow;
 		printF0s = [printF0s ' F' num2str(j-1) ' ' num2str(detectedF0s(j))];
 	end
 	disp(printF0s);
+	keyboard;
 end

@@ -119,52 +119,54 @@ public class Klapuri{
 		double[] whitened = new double[dataIn.length];
 
 		/*Calculate signal energies in filter windows??*/
-		Vector<Double> Hb = new Vector<Double>();
-		Vector<Integer> indexes = new Vector<Integer>();
 		Vector<Double> gammab = new Vector<Double>();
 		Vector<Double> stdb = new Vector<Double>();
 
 		int kk;
-		for (int i = 1;i<31;++i){
-			Hb.clear();
-			indexes.clear();
-			kk=0;
-			while (mainProgram.freq[kk] <= mainProgram.cb[i+1]){
-				if (mainProgram.freq[kk] >= mainProgram.cb[i-1]){
-					indexes.add(kk);
-					Hb.add(1-Math.abs(mainProgram.cb[i]-mainProgram.freq[indexes.lastElement()])/(mainProgram.cb[i+1]-mainProgram.cb[i-1]));
-				}
-				++kk;
+		/*The filter bank Hb could be pre-calculated, to be implemented...*/
+		for (int i = 0;i<mainProgram.Hb.length;++i){
+			double tempSum = 0;
+			for (int j = 0;j< mainProgram.Hb[i].size();++j){
+				tempSum += mainProgram.Hb[i].get(j)*Math.pow(dataIn[mainProgram.hbIndices[i].get(j)],2.0);
 			}
-			double summa = 0;
-			for (int j = 0;j< Hb.size();++j){
-				summa += Hb.get(j)*Math.pow(dataIn[indexes.get(j)],2.0);
-			}
-			stdb.add(Math.sqrt(1/((double)mainProgram.fftWindow)*summa));
+			stdb.add(Math.sqrt(tempSum/((double)mainProgram.fftWindow)));
 			gammab.add(Math.pow(stdb.lastElement(),0.33-1.0));
 		}
 
 		//Interpolate gammab...
+		double[] gammaCoeff =new double[dataIn.length];
+
 		kk=0;
-		while (mainProgram.freq[kk] < mainProgram.cb[1]){	//Search for the first frequency..
+		while (mainProgram.freq[kk] < mainProgram.cb[2]){	//Search for the first frequency..
 			++kk;
+			gammaCoeff[kk] = gammab.get(0);
 		}
 		double whitemax=0;
 		for (int i = 0;i<gammab.size()-1;++i){
-			whitened[kk] = gammab.get(i)*dataIn[kk];
-			while (mainProgram.freq[kk] < mainProgram.cb[i+2]){
-				if (mainProgram.freq[kk] > mainProgram.cb[i+1]){
-					whitened[kk] = ((gammab.get(i+1)-gammab.get(i))*(mainProgram.freq[kk]-mainProgram.cb[i+1])/(mainProgram.cb[i+2]-mainProgram.cb[i+1])+gammab.get(i))*dataIn[kk];
-				}
+		   	int init = ind(mainProgram.freq,mainProgram.cb[i+1]);
+			int end = ind(mainProgram.freq,mainProgram.cb[i+2]);
+			while (kk < end){
+				gammaCoeff[kk] = gammab.get(i)+(gammab.get(i+1)-gammab.get(i))*((double)(kk-init))/((double) (end-init));
 				++kk;
 			}
+		}
+		/*Fill in the rest of the whitened with the last gammab*/
+		while (kk<whitened.length){
+			gammaCoeff[kk] = gammab.get(gammab.size()-1);
 			++kk;
 		}
-		//Pre whitening done
-		/*Add the higher frequencies wihtout whitening*/
-		for (int i = gammab.size();i<whitened.length;++i){
-			whitened[i] = dataIn[i];
+		/*whiten the signal*/
+		for (int i = 0; i<whitened.length;++i){
+			whitened[i] = dataIn[i]*gammaCoeff[i];
 		}
 		return whitened;
+	}
+
+	private int ind(double[] arr,double a){
+	 	int b = 0;
+	 	while (arr[b] <a){
+	 		++b;
+	 	}
+	   return b;
 	}
 }

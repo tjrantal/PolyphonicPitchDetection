@@ -25,6 +25,8 @@ import timo.tuner.Analysis.*; /*Import analysis*/
 import timo.tuner.DrawImage.*; /*Import DrawImage*/
 import java.io.*;		/*ByteArrayStream*/
 import javax.sound.sampled.*; /*Sound capture*/
+/*Debugging, write signal into a file*/
+import java.nio.*;
 
 public class Capture implements Runnable{
 	/*Implement analysis here*/
@@ -68,25 +70,26 @@ public class Capture implements Runnable{
 							   	short[] data = byteArrayToShortArray(buffer);
 								/*Build test signal*/
 							   	if (true){
+							   	   double[] tempSignal = new double[data.length];
 							   	   for (int i = 0;i<data.length;++i){
-							   	      data[i] = 0;
+							   	      tempSignal[i] = 0;
 						   			for (int h =0;h<20;++h){
 
-						   				data[i] += (short) (1.0/(2.0+1.0+((double)h))*
+						   				tempSignal[i] += (1.0/(2.0+1.0+((double)h))*
 						   				(
 						   				Math.sin(2.0*Math.PI*((double)(i+testC))/mainProgram.samplingRate*82.4*((double)h+1.0))
 						   				)
 						   				*Math.pow(2.0,13.0)
 						   				);
 
-						   				data[i] += (short) (1.0/(2.0+1.0+((double)h))*
+						   				tempSignal[i] += (1.0/(2.0+1.0+((double)h))*
 						   				(
 						   				Math.sin(2.0*Math.PI*((double)(i+testC))/mainProgram.samplingRate*123.5*((double)h+1.0))
 						   				)
 						   				*Math.pow(2.0,13.0)
 						   				);
 
-   						   				data[i] += (short) (1.0/(2.0+1.0+((double)h))*
+   						   				tempSignal[i] += (1.0/(2.0+1.0+((double)h))*
 						   				(
 						   				Math.sin(2.0*Math.PI*((double)(i+testC))/mainProgram.samplingRate*164.8*((double)h+1.0))
 						   				)
@@ -94,12 +97,23 @@ public class Capture implements Runnable{
 						   				);
 						   			}
 							   	   	//System.out.print(data[i]+" ");
+							   	   	data[i] = (short) tempSignal[i];
 							   	   }
-							   	 	//++testC;
+							   	   if (testC == 0){
+							   	 	printResult(data,new String("signal.bin"));
+							   	 	++testC;
+
+							   	   }
 							   	}
 								//mainProgram.rawFigure.drawImage(data,mainProgram.imWidth,mainProgram.imHeight);
 								/*Add pitch detection here for 16 bit*/
 								Analysis analysis = new Analysis(data,mainProgram);	//FFT + klapuri analysis
+
+								if (testC == 1){
+								   printResult(analysis.klapuri.whitened,new String("whitened.bin"));
+									printResult(analysis.amplitudes,new String("amplitudes.bin"));
+								}
+
 								//mainProgram.rawFigure.drawImage(analysis.hanData,mainProgram.imWidth,mainProgram.imHeight);
 								mainProgram.rawFigure.clearPlot();
 								mainProgram.rawFigure.plotTrace(data);
@@ -108,6 +122,7 @@ public class Capture implements Runnable{
 
 								mainProgram.whitenedFftFigure.clearPlot();
 								mainProgram.whitenedFftFigure.plotTrace(analysis.klapuri.whitened,analysis.whitenedMaximum,1024);
+								mainProgram.whitenedFftFigure.plotNumber(analysis.klapuri.f0s);
 								mainProgram.whitenedFftFigure.paintImageToDraw();
 								/*
 								mainProgram.fftFigure.drawImage(analysis.amplitudes,mainProgram.imWidth,mainProgram.imHeight,analysis.maximum);
@@ -132,6 +147,34 @@ public class Capture implements Runnable{
 				shortArray[i] = (short) (((((int) arrayIn[2*i+1]) & 0XFF)<< 8) | (((int) arrayIn[2*i]) & 0XFF));
 			}
 			return shortArray;
+		}
+
+		public void printResult(short[] array,String fileName){
+		   	double[] temp = new double[array.length];
+		   	for (int i =0;i<array.length;++i){
+		   	 	temp[i] = (double) array[i];
+		   	}
+		   	printResult(temp,fileName);
+		}
+
+		public void printResult(double[] array,String fileName){
+			try{
+				/*Wrap the array to double buffer*/
+				DoubleBuffer db = DoubleBuffer.wrap(array);
+				db.rewind();
+				byte[] byteArray = new byte[array.length*8];
+				/*cast float buffer to bytebuffer, and get the byte array*/
+				ByteBuffer.wrap(byteArray).asDoubleBuffer().put(db);
+				/*Print the results to a file*/
+				BufferedOutputStream oStream = new BufferedOutputStream(new FileOutputStream(fileName));
+				oStream.write(byteArray);
+				oStream.flush();
+				oStream.close();
+				oStream = null;
+			}catch (Exception err){
+				System.out.println(err.toString());
+				System.out.println("Couldn't write the signal file");
+			}
 		}
 
 }
