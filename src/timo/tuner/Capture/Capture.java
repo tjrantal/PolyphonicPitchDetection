@@ -69,7 +69,7 @@ public class Capture implements Runnable{
 							if (bitSelection ==2){
 							   	short[] data = byteArrayToShortArray(buffer);
 								/*Build test signal*/
-							   	if (true){
+							   	if (false){
 							   	   double[] tempSignal = new double[data.length];
 							   	   for (int i = 0;i<data.length;++i){
 							   	      tempSignal[i] = 0;
@@ -99,7 +99,7 @@ public class Capture implements Runnable{
 							   	   	//System.out.print(data[i]+" ");
 							   	   	data[i] = (short) tempSignal[i];
 							   	   }
-							   	   if (testC == 0){
+							   	   if (false && testC == 0){
 							   	 	printResult(data,new String("signal.bin"));
 							   	 	++testC;
 
@@ -109,7 +109,7 @@ public class Capture implements Runnable{
 								/*Add pitch detection here for 16 bit*/
 								Analysis analysis = new Analysis(data,mainProgram);	//FFT + klapuri analysis
 
-								if (testC == 1){
+								if (false && testC == 1){
 								   printResult(analysis.klapuri.whitened,new String("whitened.bin"));
 									printResult(analysis.amplitudes,new String("amplitudes.bin"));
 								}
